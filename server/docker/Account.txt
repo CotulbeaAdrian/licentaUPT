@@ -1,0 +1,20 @@
+-- Create Account table
+CREATE TABLE Account (
+  id INT PRIMARY KEY,
+  username TEXT,
+  password TEXT,
+  email TEXT
+);
+
+-- Create UserDetails table
+CREATE TABLE UserDetails (
+  uid INT PRIMARY KEY,
+  accountId INT,
+  age INT,
+  fullName TEXT,
+  gender TEXT,
+  phonenumber TEXT,
+  role TEXT,
+  weight INT,
+  FOREIGN KEY (accountId) REFERENCES Account(id)
+);
