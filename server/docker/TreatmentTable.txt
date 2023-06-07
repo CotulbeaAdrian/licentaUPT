@@ -1,0 +1,11 @@
+CREATE TABLE medical_records (
+  uid INT PRIMARY KEY,
+  active BOOLEAN,
+  accepted BOOLEAN,
+  diagnostic TEXT,
+  doctorID INT,
+  medication TEXT,
+  patientID INT,
+  specialty TEXT,
+  symptom TEXT
+);
