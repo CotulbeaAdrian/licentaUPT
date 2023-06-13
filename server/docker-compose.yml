@@ -10,11 +10,14 @@ services:
       - medbuddy-db
   medbuddy-db:
     image: mysql:latest
+    ports:
+      - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: medbuddy
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
+      MYSQL_USER_HOST: "%"
     volumes:
       - mysql-data:/var/lib/mysql
 

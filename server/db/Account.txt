@@ -1,9 +1,9 @@
--- Create Account table
-CREATE TABLE Account (
-  id INT PRIMARY KEY,
-  username TEXT,
-  password TEXT,
-  email TEXT
+-- Create users table
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(255) UNIQUE,
+  password VARCHAR(255),
+  email VARCHAR(255) UNIQUE 
 );
 
 -- Create UserDetails table

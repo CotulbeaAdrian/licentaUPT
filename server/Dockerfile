@@ -8,10 +8,10 @@ COPY ../server.cpp /app/
 WORKDIR /app
 
 # Install any dependencies required by your server (adjust accordingly)
-RUN apt-get update && apt-get install -y libasio-dev
+RUN apt-get update && apt-get install -y libasio-dev libmysqlcppconn-dev
 
 # Build the server
-RUN g++ -o server server.cpp
+RUN g++ -o server server.cpp -lmysqlcppconn
 
 # Expose the port on which the server will listen
 EXPOSE 8080
