@@ -6,9 +6,46 @@
 #include <mysql_connection.h>
 #include <cppconn/prepared_statement.h>
 #include <cstring> // Include the <cstring> header for strlen
+#include <iomanip> // Include the <iomanip> header for std::hex and std::isdigit
 
 using namespace asio;
 using namespace asio::ip;
+
+// URL decode function
+std::string url_decode(const std::string& str)
+{
+    std::string decoded;
+    char ch;
+    int i, j;
+
+    for (i = 0, j = 0; i < str.length(); ++i, ++j)
+    {
+        if (str[i] == '%')
+        {
+            if (std::isxdigit(str[i + 1]) && std::isxdigit(str[i + 2]))
+            {
+                std::istringstream hexInput(str.substr(i + 1, 2));
+                hexInput >> std::hex >> ch;
+                decoded += ch;
+                i += 2;
+            }
+            else
+            {
+                decoded += str[i];
+            }
+        }
+        else if (str[i] == '+')
+        {
+            decoded += ' ';
+        }
+        else
+        {
+            decoded += str[i];
+        }
+    }
+
+    return decoded;
+}
 
 // Handles an incoming HTTP request
 void handleRequest(tcp::socket& socket, const std::string& request, sql::mysql::MySQL_Driver* driver)
@@ -33,16 +70,19 @@ void handleRequest(tcp::socket& socket, const std::string& request, sql::mysql::
             // Reaching to the last line which contains the request body
         }
 
-        size_t usernameStart = line.find("username=") + 9; // Find the start position of the username and add the length of "username="
-        size_t usernameEnd = line.find("&"); // Find the position of the "&" delimiter
-        std::string username = line.substr(usernameStart, usernameEnd - usernameStart); // Extract the username substring
+        // URL decode the request body
+        std::string decoded_line = url_decode(line);
 
-        size_t passwordStart = line.find("password=") + 9; // Find the start position of the password and add the length of "password="
-        size_t passwordEnd = line.find("&", passwordStart); // Find the position of the "&" delimiter starting from passwordStart
-        std::string password = line.substr(passwordStart, passwordEnd - passwordStart); // Extract the password substring
+        size_t usernameStart = decoded_line.find("username=") + 9; // Find the start position of the username and add the length of "username="
+        size_t usernameEnd = decoded_line.find("&"); // Find the position of the "&" delimiter
+        std::string username = decoded_line.substr(usernameStart, usernameEnd - usernameStart); // Extract the username substring
 
-        size_t emailStart = line.find("email=") + 6; // Find the start position of the email and add the length of "email="
-        std::string email = line.substr(emailStart); // Extract the email substring
+        size_t passwordStart = decoded_line.find("password=") + 9; // Find the start position of the password and add the length of "password="
+        size_t passwordEnd = decoded_line.find("&", passwordStart); // Find the position of the "&" delimiter starting from passwordStart
+        std::string password = decoded_line.substr(passwordStart, passwordEnd - passwordStart); // Extract the password substring
+
+        size_t emailStart = decoded_line.find("email=") + 6; // Find the start position of the email and add the length of "email="
+        std::string email = decoded_line.substr(emailStart); // Extract the email substring
         
         // Check if all required fields are present
         if (!username.empty() && !password.empty() && !email.empty())
@@ -84,16 +124,19 @@ void handleRequest(tcp::socket& socket, const std::string& request, sql::mysql::
             // Reaching to the last line which contains the request body
         }
 
-        size_t usernameStart = line.find("username=") + 9; // Find the start position of the username and add the length of "username="
-        size_t usernameEnd = line.find("&"); // Find the position of the "&" delimiter
-        std::string username = line.substr(usernameStart, usernameEnd - usernameStart); // Extract the username substring
+        // URL decode the request body
+        std::string decoded_line = url_decode(line);
 
-        size_t passwordStart = line.find("password=") + 9; // Find the start position of the password and add the length of "password="
-        size_t passwordEnd = line.find("&", passwordStart); // Find the position of the "&" delimiter starting from passwordStart
-        std::string password = line.substr(passwordStart, passwordEnd - passwordStart); // Extract the password substring
+        size_t emailStart = decoded_line.find("email=") + 6; // Find the start position of the username and add the length of "username="
+        size_t emailEnd = decoded_line.find("&"); // Find the position of the "&" delimiter
+        std::string email = decoded_line.substr(emailStart, emailEnd - emailStart); // Extract the username substring
+
+        size_t passwordStart = decoded_line.find("password=") + 9; // Find the start position of the password and add the length of "password="
+        size_t passwordEnd = decoded_line.find("&", passwordStart); // Find the position of the "&" delimiter starting from passwordStart
+        std::string password = decoded_line.substr(passwordStart, passwordEnd - passwordStart); // Extract the password substring
 
         // Check if both username and password are present
-        if (!username.empty() && !password.empty())
+        if (!email.empty() && !password.empty())
         {
             try {
                 // Establish a connection to the MySQL database
@@ -101,8 +144,8 @@ void handleRequest(tcp::socket& socket, const std::string& request, sql::mysql::
                 con->setSchema("medbuddy");
 
                 // Perform login logic
-                sql::PreparedStatement* stmt = con->prepareStatement("SELECT id FROM users WHERE username = ? AND password = ?");
-                stmt->setString(1, username);
+                sql::PreparedStatement* stmt = con->prepareStatement("SELECT id FROM users WHERE email = ? AND password = ?");
+                stmt->setString(1, email);
                 stmt->setString(2, password);
                 sql::ResultSet* res = stmt->executeQuery();
 

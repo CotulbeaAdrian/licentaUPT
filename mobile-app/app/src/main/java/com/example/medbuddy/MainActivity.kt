@@ -1,14 +1,21 @@
 package com.example.medbuddy
 
+import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import android.util.Pair as UtilPair
 
 class MainActivity : AppCompatActivity() {
+
+    private val splashScreen = 4000
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -29,5 +36,11 @@ class MainActivity : AppCompatActivity() {
         title.animation = botAnim
         tagline.animation = botAnim
 
+        Handler(Looper.getMainLooper()).postDelayed({
+            val intent = Intent(this, Login::class.java)
+            val options = ActivityOptions.makeSceneTransitionAnimation(this, UtilPair.create(title, "logo_text"),
+                UtilPair.create(image, "logo_image"))
+            startActivity(intent, options.toBundle())
+        }, splashScreen.toLong())
     }
 }
