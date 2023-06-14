@@ -1,9 +1,11 @@
 -- Create users table
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(255) UNIQUE,
+  fullName VARCHAR(255),
+  email VARCHAR(255) UNIQUE,
+  phoneNumber VARCHAR(255),
   password VARCHAR(255),
-  email VARCHAR(255) UNIQUE 
+  role VARCHAR(255)
 );
 
 -- Create UserDetails table
@@ -11,10 +13,7 @@ CREATE TABLE UserDetails (
   uid INT PRIMARY KEY,
   accountId INT,
   age INT,
-  fullName TEXT,
   gender TEXT,
-  phonenumber TEXT,
-  role TEXT,
   weight INT,
-  FOREIGN KEY (accountId) REFERENCES Account(id)
+  FOREIGN KEY (accountId) REFERENCES users(id)
 );

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spinner_items">
+        <item>Patient</item>
+        <item>Medic</item>
+    </string-array>
+
+    <string-array name="medical_specialties">
+        <item>ORL</item>
+        <item>Cardiology</item>
+        <item>Ophthalmology</item>
+        <item>Orthopedic</item>
+    </string-array>
+    <string-array name="gender_type">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+</resources>
