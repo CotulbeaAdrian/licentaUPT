@@ -5,7 +5,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.example.medbuddy.api.ApiServiceBuilder
 import com.google.android.material.textfield.TextInputLayout
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.IOException
 
 class Register : AppCompatActivity() {
@@ -16,7 +20,6 @@ class Register : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.register)
 
-        val username = findViewById<TextInputLayout>(R.id.usernameRegister)
         val password = findViewById<TextInputLayout>(R.id.passwordRegister)
         val fullName = findViewById<TextInputLayout>(R.id.fullName)
         val phoneNumber = findViewById<TextInputLayout>(R.id.phoneNumber)
@@ -39,7 +42,6 @@ class Register : AppCompatActivity() {
             }
         }
         saveData.setOnClickListener {
-            val sdUsername = username.editText?.text.toString()
             val sdPassword = password.editText?.text.toString()
             val sdFullName = fullName.editText?.text.toString()
             val sdPhoneNumber = phoneNumber.editText?.text.toString()
@@ -47,12 +49,9 @@ class Register : AppCompatActivity() {
             val sdConfirmPassword = confirmPassword.editText?.text.toString()
             val sdRole = spinner.selectedItem.toString()
 
-            if (sdUsername.isEmpty() || sdEmail.isEmpty() || sdPassword.isEmpty() ||
+            if (sdEmail.isEmpty() || sdPassword.isEmpty() ||
                 sdFullName.isEmpty() || sdPhoneNumber.isEmpty() || sdConfirmPassword.isEmpty())
             {
-                if (username.editText?.text.toString().isEmpty()) {
-                    username.error = "Please enter your username!"
-                }
                 if (sdEmail.isEmpty()) {
                     email.error = "Please enter your email address!"
                 }
@@ -80,37 +79,32 @@ class Register : AppCompatActivity() {
                 confirmPassword.error = "Passwords don't match!"
             } else {
 
-//                val client = OkHttpClient()
-//
-//                val requestBody = ("email=$sdEmail&password=$sdPassword&" +
-//                        "username=$sdUsername&phoneNumber=$sdPhoneNumber&" +
-//                        "fullName=$sdFullName&role=$sdRole").trimIndent()
-//
-//                val mediaType = "application/x-www-form-urlencoded".toMediaType()
-//
-//                val request = Request.Builder()
-//                    .url("http://192.168.0.106:8080/register")
-//                    .post(requestBody.toRequestBody(mediaType))
-//                    .build()
+                val apiService = ApiServiceBuilder.apiService
+                // Make the register request
+                val call = apiService.register(sdFullName,sdEmail, sdPhoneNumber, sdPassword, sdRole)
 
-//                println(request.body.toString())
-//                client.newCall(request).enqueue(object : Callback {
-//                    override fun onFailure(call: Call, e: IOException) {
-//                        // Handle the login failure
-//                        println("Registration failed: ${e.message}")
-//                    }
 
-//                    override fun onResponse(call: Call, response: Response) {
-//                        if (response.isSuccessful) {
-//                            val intent = Intent(, Login::javaClass)
-//                            startActivity(intent)
-//                            Toast.makeText(this, "Registered successfully.", Toast.LENGTH_SHORT).show()
-//                        } else {
-//                            // Handle the login failure
-//                            println("Registration failed failed: ${response.code}")
-//                        }
-//                    }
-//                })
+                call.enqueue(object : Callback<String> {
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        if (response.isSuccessful) {
+                            val responseBody = response.body()
+                            println("Registration success.")
+
+                            val intent = Intent(applicationContext, Login::class.java)
+                            startActivity(intent);
+                            Toast.makeText(applicationContext, "Account created successfully", Toast.LENGTH_SHORT).show()
+
+                        } else {
+                            println("Register failed. Response code: ${response.code()}")
+                            Toast.makeText(applicationContext, "Registration failed. Check the fields!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+                        println("Register request failed. Error: ${t.message}")
+                        Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                    }
+                })
             }
         }
     }

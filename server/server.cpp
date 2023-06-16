@@ -102,6 +102,8 @@ void handleRequest(tcp::socket& socket, const std::string& request, sql::mysql::
                 // Build the response body
                 response_header += "HTTP/1.1 200 OK\r\n";
                 response_body = "User registered successfully";
+
+                delete con;
             }
             catch (std::exception& e) {
                 response_header += "HTTP/1.1 500 Internal Server Error\r\n";
