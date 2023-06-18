@@ -22,6 +22,35 @@ interface ApiService {
         @Field("role") role: String
     ): Call<String>
 
+    @FormUrlEncoded
+    @POST("/updateProfile")
+    fun updateProfile(
+        @Field("id") id: String,
+        @Field("fullName") fullName: String,
+        @Field("phoneNumber") phoneNumber: String,
+        @Field("age") age: String,
+        @Field("weight") weight: String,
+        @Field("gender") gender: String
+    ): Call<String>
+
+    @FormUrlEncoded
+    @POST("/getMedicalRecordsAsPatient")
+    fun getMedicalRecordsAsPatient(
+        @Field("id") id: String
+    ): Call<String>
+
+    @FormUrlEncoded
+    @POST("/getName")
+    fun getName(
+        @Field("id") id: String
+    ): Call<String>
+
+    @FormUrlEncoded
+    @POST("/getMedicalRecordsAsDoctor")
+    fun getMedicalRecordsAsDoctor(
+        @Field("id") email: String
+    ): Call<String>
+
     @POST("/logout")
     fun logout(): Call<ResponseBody>
 }

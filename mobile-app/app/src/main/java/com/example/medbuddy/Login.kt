@@ -3,14 +3,13 @@ package com.example.medbuddy
 import SharedPrefUtil
 import android.content.Intent
 import android.os.Bundle
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.medbuddy.api.ApiServiceBuilder
+import com.example.medbuddy.data.UserData
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,9 +19,6 @@ class Login : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
         setContentView(R.layout.login)
 
         val newUser = findViewById<Button>(R.id.newUser)
@@ -83,15 +79,15 @@ class Login : AppCompatActivity() {
                             // Extract the user data from the map
                             val id = userDataMap["id"]
                             val fullName = userDataMap["fullName"]
-                            val email = userDataMap["email"]
+                            val mail = userDataMap["email"]
                             val phoneNumber = userDataMap["phoneNumber"]
                             val role = userDataMap["role"]
 
                             // Create UserData object
-                            val userData = SharedPrefUtil.UserData(
+                            val userData = UserData(
                                 id = id.orEmpty(),
                                 fullName = fullName.orEmpty(),
-                                email = email.orEmpty(),
+                                email = mail.orEmpty(),
                                 phoneNumber = phoneNumber.orEmpty(),
                                 role = role.orEmpty()
                             )

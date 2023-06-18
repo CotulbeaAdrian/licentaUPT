@@ -1,5 +1,6 @@
 import android.content.Context
 import androidx.preference.PreferenceManager
+import com.example.medbuddy.data.UserData
 
 object SharedPrefUtil {
     private const val KEY_ID = "id"
@@ -33,6 +34,4 @@ object SharedPrefUtil {
         val userData = getUserData(context)
         println(userData.id + " " + userData.fullName + " " + userData.role)
     }
-
-    data class UserData(val id: String, val fullName: String, val email: String, val phoneNumber: String, val role: String)
 }

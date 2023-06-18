@@ -9,11 +9,10 @@ CREATE TABLE users (
 );
 
 -- Create UserDetails table
-CREATE TABLE UserDetails (
-  uid INT PRIMARY KEY,
-  accountId INT,
+CREATE TABLE userDetails (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  userId INT,
   age INT,
-  gender TEXT,
-  weight INT,
-  FOREIGN KEY (accountId) REFERENCES users(id)
+  gender VARCHAR(255),
+  weight VARCHAR(10)
 );

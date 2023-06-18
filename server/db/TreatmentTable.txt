@@ -1,11 +1,10 @@
 CREATE TABLE medical_records (
-  uid INT PRIMARY KEY,
-  active BOOLEAN,
-  accepted BOOLEAN,
-  diagnostic TEXT,
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  active INT,
+  accepted INT,
+  diagnostic VARCHAR(255),
   doctorID INT,
-  medication TEXT,
+  medication VARCHAR(255),
   patientID INT,
-  specialty TEXT,
-  symptom TEXT
+  symptom VARCHAR(255)
 );

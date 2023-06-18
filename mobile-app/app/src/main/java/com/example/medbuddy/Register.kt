@@ -83,11 +83,9 @@ class Register : AppCompatActivity() {
                 // Make the register request
                 val call = apiService.register(sdFullName,sdEmail, sdPhoneNumber, sdPassword, sdRole)
 
-
                 call.enqueue(object : Callback<String> {
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         if (response.isSuccessful) {
-                            val responseBody = response.body()
                             println("Registration success.")
 
                             val intent = Intent(applicationContext, Login::class.java)
