@@ -25,17 +25,17 @@ class DoctorHistory : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.patient_history)
+        setContentView(R.layout.doctor_history)
 
-        back = findViewById(R.id.treatmentHistoryBackButton)
+        back = findViewById(R.id.BackButton)
         back.setOnClickListener {
-            val intent = Intent(this, PatientDashboard::class.java)
+            val intent = Intent(this, DoctorDashboard::class.java)
             startActivity(intent)
         }
 
         treatmentList = ArrayList()
         adapter = DoctorHistoryAdapter(this, treatmentList)
-        treatmentRecyclerView = findViewById(R.id.treatmentHistoryRecyclerView)
+        treatmentRecyclerView = findViewById(R.id.patientsHistoryRecyclerView)
         treatmentRecyclerView.layoutManager = LinearLayoutManager(this)
         treatmentRecyclerView.adapter = adapter
 

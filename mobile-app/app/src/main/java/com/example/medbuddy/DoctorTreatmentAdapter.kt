@@ -37,7 +37,7 @@ class DoctorTreatmentAdapter(val context: Context, private val treatmentList: Ar
                     holder.textName.text =fullName + " - " + treatment.diagnostic
 
                     holder.itemView.setOnClickListener {
-                        val intent = Intent(context, PatientInteraction::class.java)
+                        val intent = Intent(context, DoctorInteraction::class.java)
                         intent.putExtra("recordID", treatment.id)
                         intent.putExtra("symptom", treatment.symptom)
                         intent.putExtra("diagnostic", treatment.diagnostic)

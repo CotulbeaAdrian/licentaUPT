@@ -95,6 +95,31 @@ interface ApiService {
         @Field("requestID") requestID: String?
     ): Call<String>
 
+    @FormUrlEncoded
+    @POST("/getPatientDetails")
+    fun getPatientDetails(
+        @Field("id") id: String?
+    ): Call<String>
+
+    @FormUrlEncoded
+    @POST("/endMedication")
+    fun endMedication(
+        @Field("id") id: String?
+    ): Call<String>
+
+    @FormUrlEncoded
+    @POST("/editMedication")
+    fun editMedication(
+        @Field("id") id: String?,
+        @Field("medication") medication: String?
+    ): Call<String>
+
+    @FormUrlEncoded
+    @POST("/getSpecialty")
+    fun getSpecialty(
+        @Field("id") id: String?
+    ): Call<String>
+
     @POST("/logout")
     fun logout(): Call<ResponseBody>
 }

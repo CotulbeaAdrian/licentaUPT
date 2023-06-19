@@ -202,14 +202,27 @@ class DoctorInteraction : AppCompatActivity() {
             mDialog.show()
 
             mDialog.findViewById<LinearLayout>(R.id.layoutEditMedicationSave).setOnClickListener{
-                val treatmentUID = intent.getStringExtra("treatmentUID")
-                val userReference =
-                    treatmentUID?.let { it1 -> mDbRef.child("Treatment").child(it1) }
-                val updates = HashMap<String, Any>()
-                updates["medication"] = mDialog.findViewById<EditText>(R.id.editMedication).text.toString()
-                userReference?.updateChildren(updates)
-                mDialog.dismiss()
-                startActivity(Intent(this, DoctorDashboard::class.java))
+                val newMedication = mDialog.findViewById<EditText>(R.id.editMedication).text.toString()
+                val editCall = apiService.editMedication(interactionID, newMedication)
+                editCall.enqueue(object : Callback<String> {
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        if (response.isSuccessful) {
+                            Toast.makeText(
+                                applicationContext,
+                                "Medication updated",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            println("Medication change failed. Response code: ${response.code()}")
+                            Toast.makeText(applicationContext, "Treatment end failed.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+                        println("Medication change failed serverside. Error: ${t.message}")
+                        Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                    }
+                })
             }
 
             mDialog.findViewById<ImageView>(R.id.backButtonMedication).setOnClickListener{
@@ -218,12 +231,28 @@ class DoctorInteraction : AppCompatActivity() {
         }
 
         findViewById<LinearLayout>(R.id.layoutEndMedication).setOnClickListener {
-            val treatmentUID = intent.getStringExtra("treatmentUID")
-            val userReference =
-                treatmentUID?.let { it1 -> mDbRef.child("Treatment").child(it1) }
-            val updates = HashMap<String, Any>()
-            updates["active"] = false
-            userReference?.updateChildren(updates)
+            val endCall = apiService.endMedication(interactionID)
+            endCall.enqueue(object : Callback<String> {
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    if (response.isSuccessful) {
+                        val intent = Intent(applicationContext, DoctorDashboard::class.java)
+                        startActivity(intent)
+                        Toast.makeText(
+                            applicationContext,
+                            "Treatment ended",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        println("Treatment end failed. Response code: ${response.code()}")
+                        Toast.makeText(applicationContext, "Treatment end failed.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    println("Treatment end failed serverside. Error: ${t.message}")
+                    Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
     }
 

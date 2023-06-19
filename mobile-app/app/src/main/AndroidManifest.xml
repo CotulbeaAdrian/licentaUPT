@@ -51,12 +51,32 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
+            android:name=".DoctorHistory"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".DoctorInteraction"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
             android:name=".PatientInteraction"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".RequestCreate"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".RequestsList"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".RequestResponse"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 

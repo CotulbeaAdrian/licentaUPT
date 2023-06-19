@@ -34,10 +34,42 @@ class RequestResponse : AppCompatActivity() {
         }
 
         findViewById<TextView>(R.id.requestPatientName).text = intent.getStringExtra("patientFullName")
-        findViewById<TextView>(R.id.patientAgeData).text = intent.getStringExtra("age")
-        findViewById<TextView>(R.id.patientGenderData).text = intent.getStringExtra("gender")
-        findViewById<TextView>(R.id.patientWeightData).text = intent.getStringExtra("weight")
         findViewById<TextView>(R.id.patientWords).text = intent.getStringExtra("symptom")
+
+
+        val detailsCall = apiService.getPatientDetails(intent.getStringExtra("patientID"))
+        detailsCall.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    val lines = responseBody?.split("\n") ?: emptyList()
+                    val detailsDataMap = mutableMapOf<String, String>()
+
+                    for (line in lines) {
+                        val keyValue = line.split("=")
+                        if (keyValue.size == 2) {
+                            val key = keyValue[0].trim()
+                            val value = keyValue[1].trim()
+                            detailsDataMap[key] = value
+                        }
+                    }
+                    findViewById<TextView>(R.id.patientAgeData).text = detailsDataMap["age"]
+                    findViewById<TextView>(R.id.patientGenderData).text = detailsDataMap["gender"]
+                    findViewById<TextView>(R.id.patientWeightData).text = detailsDataMap["weight"]
+                } else {
+                    println("Request decline failed. Response code: ${response.code()}")
+                    Toast.makeText(applicationContext, "Request decline failed. Check the fields!", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                println("Request decline failed serverside. Error: ${t.message}")
+                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+
+
 
         val requestID = intent.getStringExtra("requestID")
 

@@ -61,7 +61,6 @@ class PatientDashboard : AppCompatActivity() {
 
         treatmentList = ArrayList()
         adapter = PatientTreatmentAdapter(this, treatmentList)
-
         treatmentRecyclerView = findViewById(R.id.treatmentRecyclerView)
         treatmentRecyclerView.layoutManager = LinearLayoutManager(this)
         treatmentRecyclerView.adapter = adapter

@@ -6,8 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.medbuddy.api.ApiServiceBuilder
 import com.example.medbuddy.data.MedicalRecord
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class RequestTreatmentAdapter(val context: Context, private val treatmentList: ArrayList<MedicalRecord>) :
     RecyclerView.Adapter<RequestTreatmentAdapter.UserViewHolder>() {
@@ -19,30 +24,36 @@ class RequestTreatmentAdapter(val context: Context, private val treatmentList: A
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        val patient = treatmentList[position]
-        val databaseRef = FirebaseDatabase.getInstance().getReference("Users/")
-        patient.patientUID?.let {
-            databaseRef.child(it).addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val fullName = snapshot.child("fullName").getValue(String::class.java)
+        val treatment = treatmentList[position]
+        val apiBuilder = ApiServiceBuilder.apiService
+
+        val call = apiBuilder.getName(treatment.patientID)
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    val aux = responseBody?.split("=")
+                    val fullName = aux?.get(1)
                     holder.textName.text = fullName
+
                     holder.itemView.setOnClickListener {
                         val intent = Intent(context, RequestResponse::class.java)
-                        intent.putExtra("age", patient.age)
-                        intent.putExtra("weight", patient.weight)
-                        intent.putExtra("gender", patient.gender)
-                        intent.putExtra("symptom", patient.symptom)
+                        intent.putExtra("requestID", treatment.id)
+                        intent.putExtra("symptom", treatment.symptom)
+                        intent.putExtra("patientID", treatment.patientID)
                         intent.putExtra("patientFullName", fullName)
-                        intent.putExtra("uid", patient.uid)
                         context.startActivity(intent)
                     }
+                } else {
+                    println("Request failed. Response code: ${response.code()}")
+                    Toast.makeText(context, "Doctor ID not found!", Toast.LENGTH_SHORT).show()
                 }
-
-                override fun onCancelled(error: DatabaseError) {
-                    // Do nothing
-                }
-            })
-        }
+            }
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                println("Data request failed. Error: ${t.message}")
+                Toast.makeText(context, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     override fun getItemCount(): Int {
