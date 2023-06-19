@@ -1,10 +1,11 @@
 CREATE TABLE medical_records (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  active INT,
-  accepted INT,
+  active INT default '1',
+  accepted INT default '0',
   diagnostic VARCHAR(255),
   doctorID INT,
   medication VARCHAR(255),
   patientID INT,
-  symptom VARCHAR(255)
+  symptom VARCHAR(255),
+  specialty VARCHAR(255)
 );

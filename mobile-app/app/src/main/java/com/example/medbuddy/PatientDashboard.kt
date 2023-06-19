@@ -78,10 +78,9 @@ class PatientDashboard : AppCompatActivity() {
             )
             val logoutButton = pDialog.findViewById<Button>(R.id.btnLogout)
             logoutButton.setOnClickListener{
+                SharedPrefUtil.clearUserData(applicationContext)
                 startActivity(Intent(this, Login::class.java))
-
                 finish()
-
                 pDialog.dismiss()
             }
             val editProfileButton = pDialog.findViewById<Button>(R.id.btnEditProfile)
@@ -181,21 +180,17 @@ class PatientDashboard : AppCompatActivity() {
 
         treatmentList.clear()
         val call = apiService.getMedicalRecordsAsPatient(userData.id)
-        println(userData.id)
 
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
 
-                    println("YESSS")
-
                     val entries = responseBody?.split("&") ?: emptyList()
 
                     for (entry in entries) {
                         val lines = entry.split("\n")
                         val treatmentDataMap = mutableMapOf<String, String>()
-
                         for (line in lines) {
                             val keyValue = line.split("=")
                             if (keyValue.size == 2) {
@@ -203,7 +198,9 @@ class PatientDashboard : AppCompatActivity() {
                                 val value = keyValue[1].trim()
                                 treatmentDataMap[key] = value
                             }
-                            // Extract the treatment data from the map
+                        }
+                        // Extract the treatment data from the map
+                        if(treatmentDataMap["id"]?.isNotBlank() == true) {
                             val id = treatmentDataMap["id"]
                             val active = treatmentDataMap["active"]
                             val accepted = treatmentDataMap["accepted"]
@@ -212,23 +209,31 @@ class PatientDashboard : AppCompatActivity() {
                             val symptom = treatmentDataMap["symptom"]
                             val diagnostic = treatmentDataMap["diagnostic"]
                             val medication = treatmentDataMap["medication"]
-                            // Create MedicalRecord object
+                            val specialty = treatmentDataMap["specialty"]
 
+                            // Create MedicalRecord object
                             val auxTreatment = MedicalRecord(
-                                    id.orEmpty(),
-                                    active.orEmpty(),
-                                    accepted.orEmpty(),
-                                    patientID.orEmpty(),
-                                    doctorID.orEmpty(),
-                                    symptom.orEmpty(),
-                                    diagnostic.orEmpty(),
-                                    medication.orEmpty())
-                            treatmentList.add(auxTreatment)
+                                id.orEmpty(),
+                                active.orEmpty(),
+                                accepted.orEmpty(),
+                                patientID.orEmpty(),
+                                doctorID.orEmpty(),
+                                symptom.orEmpty(),
+                                diagnostic.orEmpty(),
+                                medication.orEmpty(),
+                                specialty.orEmpty()
+                            )
+
+                            if(auxTreatment.accepted == "1" && auxTreatment.active == "1"){
+                                treatmentList.add(auxTreatment)
+                                println(auxTreatment)
+                            }
                         }
                     }
+                    adapter.notifyDataSetChanged()
                 } else {
                     println("Request failed. Response code: ${response.code()}")
-                    Toast.makeText(applicationContext, "Invalid email or password", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "Data request failed", Toast.LENGTH_SHORT).show()
                 }
             }
             override fun onFailure(call: Call<String>, t: Throwable) {

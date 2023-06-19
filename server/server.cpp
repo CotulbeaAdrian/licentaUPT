@@ -302,7 +302,7 @@ void handleRequest(tcp::socket& socket, const std::string& request, sql::mysql::
     }
 
 
-        // ### Medical Records ###
+        // ### Medical Records as patient ###
 
 
 
@@ -349,6 +349,7 @@ void handleRequest(tcp::socket& socket, const std::string& request, sql::mysql::
                         std::string symptom = res->getString("symptom");
                         std::string diagnostic = res->getString("diagnostic");
                         std::string medication = res->getString("medication");
+                        std::string specialty = res->getString("specialty");
 
                         // Build the response body with user and user details information
                         std::ostringstream response_aux;
@@ -359,7 +360,8 @@ void handleRequest(tcp::socket& socket, const std::string& request, sql::mysql::
                         response_aux << "doctorID=" << doctorID << std::endl;
                         response_aux << "symptom=" << symptom << std::endl;
                         response_aux << "diagnostic=" << diagnostic << std::endl;
-                        response_aux << "medication=" << medication << "&" << std::endl;
+                        response_aux << "medication=" << medication << std::endl;
+                        response_aux << "specialty=" << specialty << "&" << std::endl;
 
                         response_header += "HTTP/1.1 200 OK\r\n";
                         response_body += response_aux.str();
@@ -369,7 +371,7 @@ void handleRequest(tcp::socket& socket, const std::string& request, sql::mysql::
                 {
                     // User not found or invalid credentials
                     response_header += "HTTP/1.1 401 Unauthorized\r\n";
-                    response_body = "Invalid email or password";
+                    response_body = "Invalid id";
                 }
 
                 delete res;
@@ -389,6 +391,191 @@ void handleRequest(tcp::socket& socket, const std::string& request, sql::mysql::
             response_body = "Invalid data request";
         }
     }
+
+
+        // ### Medical Records as doctor ###
+
+
+
+    else if (method == "POST" && path == "/getMedicalRecordsAsPatient")
+    {
+        std::string line;
+
+        while (std::getline(request_stream, line))
+        {
+            // Reaching the last line which contains the request body
+        }
+        // URL decode the request body
+        std::string decoded_line = urlDecode(line);
+        
+        size_t idStart = decoded_line.find("id=") + 3; // Find the start position of the id and add the length of "id="
+        std::string id = decoded_line.substr(idStart); // Extract the id substring
+
+        // Check if email and password are present
+        if (!id.empty())
+        {
+            try 
+            {
+                // Create a MySQL connection
+                sql::Connection* con = driver->connect("tcp://medbuddy-db:3306", "admin", "admin");
+                con->setSchema("medbuddy");
+
+                // Prepare the SQL statement
+                std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement("SELECT * FROM medical_records WHERE doctorID = ?"));
+                pstmt->setString(1, id);
+
+                sql::ResultSet* res = pstmt->executeQuery();
+
+                // Check if a matching user was found
+                if(res->next())
+                {
+                    do
+                    {
+                        // Retrieve the user's ID and username
+                        int id = res->getInt("id");
+                        std::string active = res->getString("active");
+                        std::string accepted = res->getString("accepted");
+                        std::string patientID = res->getString("patientID");
+                        std::string doctorID = res->getString("doctorID");
+                        std::string symptom = res->getString("symptom");
+                        std::string diagnostic = res->getString("diagnostic");
+                        std::string medication = res->getString("medication");
+                        std::string specialty = res->getString("specialty");
+
+                        // Build the response body with user and user details information
+                        std::ostringstream response_aux;
+                        response_aux << "id=" << id << std::endl;
+                        response_aux << "active=" << active << std::endl;
+                        response_aux << "accepted=" << accepted << std::endl;
+                        response_aux << "patientID=" << patientID << std::endl;
+                        response_aux << "doctorID=" << doctorID << std::endl;
+                        response_aux << "symptom=" << symptom << std::endl;
+                        response_aux << "diagnostic=" << diagnostic << std::endl;
+                        response_aux << "medication=" << medication << std::endl;
+                        response_aux << "specialty=" << specialty << "&" << std::endl;
+
+                        response_header += "HTTP/1.1 200 OK\r\n";
+                        response_body += response_aux.str();
+                    } while (res->next());
+                }
+                else
+                {
+                    // User not found or invalid credentials
+                    response_header += "HTTP/1.1 401 Unauthorized\r\n";
+                    response_body = "Invalid id";
+                }
+
+                delete res;
+                delete con;
+
+            }
+            catch (std::exception& e) 
+            {
+                std::cerr << "Data request failed: " << e.what() << std::endl;
+                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_body = "Data request failed";
+            }
+        }
+        else
+        {
+            response_header += "HTTP/1.1 400 Bad Request";
+            response_body = "Invalid data request";
+        }
+    }
+
+
+        // ### Medical Records by ID ###
+
+
+    else if (method == "POST" && path == "/getMedicalRecordsByID")
+    {
+        std::string line;
+
+        while (std::getline(request_stream, line))
+        {
+            // Reaching the last line which contains the request body
+        }
+        // URL decode the request body
+        std::string decoded_line = urlDecode(line);
+        
+        size_t idStart = decoded_line.find("id=") + 3; // Find the start position of the id and add the length of "id="
+        std::string id = decoded_line.substr(idStart); // Extract the id substring
+
+        // Check if email and password are present
+        if (!id.empty())
+        {
+            try 
+            {
+                // Create a MySQL connection
+                sql::Connection* con = driver->connect("tcp://medbuddy-db:3306", "admin", "admin");
+                con->setSchema("medbuddy");
+
+                // Prepare the SQL statement
+                std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement("SELECT * FROM medical_records WHERE id = ?"));
+                pstmt->setString(1, id);
+
+                sql::ResultSet* res = pstmt->executeQuery();
+
+                // Check if a matching user was found
+                if(res->next())
+                {
+                    do
+                    {
+                        // Retrieve the user's ID and username
+                        int id = res->getInt("id");
+                        std::string active = res->getString("active");
+                        std::string accepted = res->getString("accepted");
+                        std::string patientID = res->getString("patientID");
+                        std::string doctorID = res->getString("doctorID");
+                        std::string symptom = res->getString("symptom");
+                        std::string diagnostic = res->getString("diagnostic");
+                        std::string medication = res->getString("medication");
+                        std::string specialty = res->getString("specialty");
+
+                        // Build the response body with user and user details information
+                        std::ostringstream response_aux;
+                        response_aux << "id=" << id << std::endl;
+                        response_aux << "active=" << active << std::endl;
+                        response_aux << "accepted=" << accepted << std::endl;
+                        response_aux << "patientID=" << patientID << std::endl;
+                        response_aux << "doctorID=" << doctorID << std::endl;
+                        response_aux << "symptom=" << symptom << std::endl;
+                        response_aux << "diagnostic=" << diagnostic << std::endl;
+                        response_aux << "medication=" << medication << std::endl;
+                        response_aux << "specialty=" << specialty << std::endl;
+
+                        response_header += "HTTP/1.1 200 OK\r\n";
+                        response_body += response_aux.str();
+                    } while (res->next());
+                }
+                else
+                {
+                    // User not found or invalid credentials
+                    response_header += "HTTP/1.1 401 Unauthorized\r\n";
+                    response_body = "Invalid id";
+                }
+
+                delete res;
+                delete con;
+
+            }
+            catch (std::exception& e) 
+            {
+                std::cerr << "Data request failed: " << e.what() << std::endl;
+                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_body = "Data request failed";
+            }
+        }
+        else
+        {
+            response_header += "HTTP/1.1 400 Bad Request";
+            response_body = "Invalid data request";
+        }
+    }
+
+
+    // ### GET NAME ###
+
 
     else if (method == "POST" && path == "/getName")
     {
@@ -435,7 +622,7 @@ void handleRequest(tcp::socket& socket, const std::string& request, sql::mysql::
                 {
                     // User not found or invalid credentials
                     response_header += "HTTP/1.1 401 Unauthorized\r\n";
-                    response_body = "Invalid email or password";
+                    response_body = "Invalid id";
                 }
 
                 delete res;
@@ -453,6 +640,220 @@ void handleRequest(tcp::socket& socket, const std::string& request, sql::mysql::
         {
             response_header += "HTTP/1.1 400 Bad Request";
             response_body = "Invalid data request";
+        }
+    }
+
+    
+
+        // ### CREATE MEDICAL REQUEST ###
+
+
+    else if (method == "POST" && path == "/createRequest")
+    {
+        std::string line;
+
+        while (std::getline(request_stream, line))
+        {
+            // Reaching the last line which contains the request body
+        }
+
+        // URL decode the request body
+        std::string decoded_line = urlDecode(line);
+
+        size_t patientIDStart = decoded_line.find("patientID=") + 10; // Find the start position of the patientID and add the length of "patientID="
+        size_t patientIDEnd = decoded_line.find("&", patientIDStart); // Find the position of the "&" delimiter starting from patientIDStart
+        std::string patientID = decoded_line.substr(patientIDStart, patientIDEnd - patientIDStart); // Extract the patientID substring
+
+        size_t symptomStart = decoded_line.find("symptom=") + 8; // Find the start position of the symptom and add the length of "symptom="
+        size_t symptomEnd = decoded_line.find("&", symptomStart); // Find the position of the "&" delimiter starting from symptomStart
+        std::string symptom = decoded_line.substr(symptomStart, symptomEnd - symptomStart); // Extract the symptom substring
+
+        size_t specialtyStart = decoded_line.find("specialty=") + 10; // Find the start position of the specialty and add the length of "specialty="
+        size_t specialtyEnd = decoded_line.find("&", specialtyStart); // Find the position of the "&" delimiter starting from specialtyStart
+        std::string specialty = decoded_line.substr(specialtyStart, specialtyEnd - specialtyStart); // Extract the specialty substring
+
+        // Check if all required fields are present
+        if (!patientID.empty()  && !symptom.empty() && !specialty.empty())
+        {
+            try {
+                // Create a MySQL connection
+                sql::Connection* con = driver->connect("tcp://medbuddy-db:3306", "admin", "admin");
+                con->setSchema("medbuddy");
+                
+                // Prepare the SQL statement
+                std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement("INSERT INTO medical_records (patientID, symptom, specialty) VALUES (?, ?, ?)"));
+                pstmt->setString(1, patientID);
+                pstmt->setString(2, symptom);
+                pstmt->setString(3, specialty);
+
+                // Execute the SQL statement
+                pstmt->execute();
+
+                // Build the response body
+                response_header += "HTTP/1.1 200 OK\r\n";
+                response_body = "Request created";
+
+                delete con;
+            }
+            catch (std::exception& e) {
+                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                std::cerr << "Request creation failed: " << e.what() << std::endl;
+                response_body = "Request creation failed";
+            }
+        }
+        else
+        {
+            response_header += "HTTP/1.1 400 Bad Request";
+            response_body = "Invalid request create request";
+        }
+    }
+
+
+        // ### Send Message ###
+
+
+    else if (method == "POST" && path == "/sendMessage")
+    {
+        std::string line;
+
+        while (std::getline(request_stream, line))
+        {
+            // Reaching the last line which contains the request body
+        }
+
+        // URL decode the request body
+        std::string decoded_line = urlDecode(line);
+
+        size_t roomIDStart = decoded_line.find("roomID=") + 7; // Find the start position of the roomID and add the length of "roomID="
+        size_t roomIDEnd = decoded_line.find("&", roomIDStart); // Find the position of the "&" delimiter starting from roomIDStart
+        std::string roomID = decoded_line.substr(roomIDStart, roomIDEnd - roomIDStart); // Extract the roomID substring
+
+        size_t senderIDStart = decoded_line.find("senderID=") + 9; // Find the start position of the symptom and add the length of "senderID="
+        size_t senderIDEnd = decoded_line.find("&", senderIDStart); // Find the position of the "&" delimiter starting from senderIDStart
+        std::string senderID = decoded_line.substr(senderIDStart, senderIDEnd - senderIDStart); // Extract the senderID substring
+
+        size_t receiverIDStart = decoded_line.find("receiverID=") + 11; // Find the start position of the receiverID and add the length of "receiverID="
+        size_t receiverIDEnd = decoded_line.find("&", receiverIDStart); // Find the position of the "&" delimiter starting from receiverIDStart
+        std::string receiverID = decoded_line.substr(receiverIDStart, receiverIDEnd - receiverIDStart); // Extract the receiverID substring
+
+        size_t messageStart = decoded_line.find("message=") + 8; // Find the start position of the message and add the length of "message="
+        size_t messageEnd = decoded_line.find("&", messageStart); // Find the position of the "&" delimiter starting from messageStart
+        std::string message = decoded_line.substr(messageStart, messageEnd - messageStart); // Extract the message substring
+
+        // Check if all required fields are present
+        if (!roomID.empty()  && !senderID.empty() && !receiverID.empty() && !message.empty())
+        {
+            try {
+                // Create a MySQL connection
+                sql::Connection* con = driver->connect("tcp://medbuddy-db:3306", "admin", "admin");
+                con->setSchema("medbuddy");
+                
+                // Prepare the SQL statement
+                std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement("INSERT INTO messages (roomID, senderID, receiverID, message) VALUES (?, ?, ?, ?)"));
+                pstmt->setString(1, roomID);
+                pstmt->setString(2, senderID);
+                pstmt->setString(3, receiverID);
+                pstmt->setString(4, message);
+
+                // Execute the SQL statement
+                pstmt->execute();
+
+                // Build the response body
+                response_header += "HTTP/1.1 200 OK\r\n";
+                response_body = "Request created";
+
+                delete con;
+            }
+            catch (std::exception& e) {
+                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                std::cerr << "Send message failed: " << e.what() << std::endl;
+                response_body = "Send message failed";
+            }
+        }
+        else
+        {
+            response_header += "HTTP/1.1 400 Bad Request";
+            response_body = "Invalid request send message";
+        }
+    }
+
+
+        // ### Get Messages ###
+
+
+    else if (method == "POST" && path == "/getMessages")
+    {
+        std::string line;
+
+        while (std::getline(request_stream, line))
+        {
+            // Reaching the last line which contains the request body
+        }
+        // URL decode the request body
+        std::string decoded_line = urlDecode(line);
+        
+        size_t roomIDStart = decoded_line.find("roomID=") + 7; // Find the start position of the roomID and add the length of "roomID="
+        size_t roomIDEnd = decoded_line.find("&", roomIDStart); // Find the position of the "&" delimiter starting from roomIDStart
+        std::string roomID = decoded_line.substr(roomIDStart, roomIDEnd - roomIDStart); // Extract the roomID substring
+
+        // Check if email and password are present
+        if (!roomID.empty())
+        {
+            try 
+            {
+                // Create a MySQL connection
+                sql::Connection* con = driver->connect("tcp://medbuddy-db:3306", "admin", "admin");
+                con->setSchema("medbuddy");
+
+                // Prepare the SQL statement
+                std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement("SELECT * FROM messages WHERE roomID = ?"));
+                pstmt->setString(1, roomID);
+
+                sql::ResultSet* res = pstmt->executeQuery();
+
+                // Check if a matching user was found
+                if(res->next())
+                {
+                    do
+                    {
+                        // Retrieve the user's ID and username
+                        std::string senderID = res->getString("senderID");
+                        std::string receiverID = res->getString("receiverID");
+                        std::string message = res->getString("message");
+
+                        // Build the response body with user and user details information
+                        std::ostringstream response_aux;
+                        response_aux << "roomID=" << roomID << std::endl;
+                        response_aux << "receiverID=" << receiverID << std::endl;
+                        response_aux << "senderID=" << senderID << std::endl;
+                        response_aux << "message=" << message << "&" << std::endl;
+
+                        response_header += "HTTP/1.1 200 OK\r\n";
+                        response_body += response_aux.str();
+                    } while (res->next());
+                }
+                else
+                {
+                    // User not found or invalid credentials
+                    response_header += "HTTP/1.1 401 Unauthorized\r\n";
+                    response_body = "Invalid roomID and receiverID";
+                }
+
+                delete res;
+                delete con;
+
+            }
+            catch (std::exception& e) 
+            {
+                std::cerr << "Data request failed: " << e.what() << std::endl;
+                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_body = "Messages request failed";
+            }
+        }
+        else
+        {
+            response_header += "HTTP/1.1 400 Bad Request";
+            response_body = "Invalid messages request";
         }
     }
 

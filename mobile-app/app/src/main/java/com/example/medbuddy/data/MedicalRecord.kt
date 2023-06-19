@@ -8,11 +8,12 @@ data class MedicalRecord(
     var doctorID: String,
     var symptom: String,
     var diagnostic: String,
-    var medication: String
+    var medication: String,
+    var specialty: String
 ) {
     override fun toString(): String {
         return "MedicalRecord(id='$id', doctorID='$doctorID', patientID='$patientID', " +
                 "symptom='$symptom', diagnostic='$diagnostic', medication='$medication', accepted=$accepted, " +
-                "active=$active)"
+                "active=$active), specialty=$specialty"
     }
 }

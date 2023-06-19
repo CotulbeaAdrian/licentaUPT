@@ -30,6 +30,17 @@ object SharedPrefUtil {
         return UserData(id, fullName, email, phoneNumber, role)
     }
 
+    fun clearUserData(context: Context) {
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val editor = sharedPrefs.edit()
+        editor.remove(KEY_ID)
+        editor.remove(KEY_FULL_NAME)
+        editor.remove(KEY_EMAIL)
+        editor.remove(KEY_PHONE_NUMBER)
+        editor.remove(KEY_ROLE)
+        editor.apply()
+    }
+
     fun toString(context: Context) {
         val userData = getUserData(context)
         println(userData.id + " " + userData.fullName + " " + userData.role)

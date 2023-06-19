@@ -34,14 +34,14 @@ interface ApiService {
     ): Call<String>
 
     @FormUrlEncoded
-    @POST("/getMedicalRecordsAsPatient")
-    fun getMedicalRecordsAsPatient(
+    @POST("/getName")
+    fun getName(
         @Field("id") id: String
     ): Call<String>
 
     @FormUrlEncoded
-    @POST("/getName")
-    fun getName(
+    @POST("/getMedicalRecordsAsPatient")
+    fun getMedicalRecordsAsPatient(
         @Field("id") id: String
     ): Call<String>
 
@@ -49,6 +49,35 @@ interface ApiService {
     @POST("/getMedicalRecordsAsDoctor")
     fun getMedicalRecordsAsDoctor(
         @Field("id") email: String
+    ): Call<String>
+
+    @FormUrlEncoded
+    @POST("/getMedicalRecordsByID")
+    fun getMedicalRecordsByID(
+        @Field("id") id: String
+    ): Call<String>
+
+    @FormUrlEncoded
+    @POST("/getMessages")
+    fun getMessages(
+        @Field("roomID") roomID: String?
+    ): Call<String>
+
+    @FormUrlEncoded
+    @POST("/sendMessage")
+    fun sendMessage(
+        @Field("roomID") roomID: String?,
+        @Field("senderID") senderID: String?,
+        @Field("receiverID") receiverID: String?,
+        @Field("message") message: String
+    ): Call<String>
+
+    @FormUrlEncoded
+    @POST("/createRequest")
+    fun createRequest(
+        @Field("patientID") id: String,
+        @Field("symptom") fullName: String,
+        @Field("specialty") phoneNumber: String,
     ): Call<String>
 
     @POST("/logout")

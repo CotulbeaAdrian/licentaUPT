@@ -1,7 +1,9 @@
 package com.example.medbuddy
 
+import android.app.Dialog
 import android.content.Context
-import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +16,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PatientTreatmentAdapter(val context: Context, private val treatmentList: ArrayList<MedicalRecord>) :
-    RecyclerView.Adapter<PatientTreatmentAdapter.UserViewHolder>() {
+class PatientHistoryAdapter(val context: Context, private val treatmentList: ArrayList<MedicalRecord>) :
+    RecyclerView.Adapter<PatientHistoryAdapter.UserViewHolder>() {
+
+    private lateinit var mDialog: Dialog
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.list_element, parent, false)
@@ -27,7 +31,6 @@ class PatientTreatmentAdapter(val context: Context, private val treatmentList: A
         val apiService = ApiServiceBuilder.apiService
         val call = apiService.getName(treatment.doctorID)
 
-
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
@@ -35,17 +38,19 @@ class PatientTreatmentAdapter(val context: Context, private val treatmentList: A
                     val aux = responseBody?.split("=")
                     val fullName = aux?.get(1)
                     holder.textName.text = "Dr. " + fullName + " - " + treatment.diagnostic
-
                     holder.itemView.setOnClickListener {
-                        val intent = Intent(context, PatientInteraction::class.java)
-                        intent.putExtra("recordID", treatment.id)
-                        intent.putExtra("symptom", treatment.symptom)
-                        intent.putExtra("diagnostic", treatment.diagnostic)
-                        intent.putExtra("medication", treatment.medication)
-                        intent.putExtra("patientID", treatment.patientID)
-                        intent.putExtra("doctorID", treatment.doctorID)
-                        intent.putExtra("doctorFullName", fullName)
-                        context.startActivity(intent)
+                        mDialog = Dialog(context)
+                        mDialog.setContentView(R.layout.pop_up_patient_history)
+                        mDialog.setTitle("Pop-up Window")
+                        mDialog.findViewById<TextView>(R.id.fullName).text = fullName
+                        mDialog.findViewById<TextView>(R.id.diagnostic).text = treatment.diagnostic
+                        mDialog.findViewById<TextView>(R.id.medication).text = treatment.medication
+                        mDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        mDialog.window!!.setLayout(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        )
+                        mDialog.show()
                     }
                 } else {
                     println("Request failed. Response code: ${response.code()}")
