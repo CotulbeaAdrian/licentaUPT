@@ -14,34 +14,35 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PatientHistory : AppCompatActivity() {
+class RequestsList : AppCompatActivity() {
 
     private lateinit var treatmentRecyclerView: RecyclerView
-    private lateinit var treatmentList: ArrayList<MedicalRecord>
-    private lateinit var adapter: PatientHistoryAdapter
+    private lateinit var requestsList: ArrayList<MedicalRecord>
+    private lateinit var adapter: RequestTreatmentAdapter
 
     private lateinit var back: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.patient_history)
+        val userData = SharedPrefUtil.getUserData(applicationContext)
+        val apiService = ApiServiceBuilder.apiService
 
-        back = findViewById(R.id.treatmentHistoryBackButton)
+        setContentView(R.layout.request_list)
+
+        back = findViewById(R.id.backButton)
         back.setOnClickListener {
-            val intent = Intent(this, PatientDashboard::class.java)
+            val intent = Intent(this, DoctorDashboard::class.java)
             startActivity(intent)
         }
 
-        treatmentList = ArrayList()
-        adapter = PatientHistoryAdapter(this, treatmentList)
-        treatmentRecyclerView = findViewById(R.id.treatmentHistoryRecyclerView)
+        requestsList = ArrayList()
+        adapter = RequestTreatmentAdapter(this, requestsList)
+        treatmentRecyclerView = findViewById(R.id.requestsRecyclerView)
         treatmentRecyclerView.layoutManager = LinearLayoutManager(this)
         treatmentRecyclerView.adapter = adapter
 
-        val apiService = ApiServiceBuilder.apiService
-        val userData = SharedPrefUtil.getUserData(applicationContext)
-        val call = apiService.getMedicalRecordsAsPatient(userData.id)
+        val call = apiService.getMedicalRecordsAsDoctor(userData.id)
 
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -86,8 +87,10 @@ class PatientHistory : AppCompatActivity() {
                                 specialty.orEmpty()
                             )
 
-                            if(auxTreatment.accepted == "1" && auxTreatment.active == "0")
-                                treatmentList.add(auxTreatment)
+                            if(auxTreatment.accepted == "0" && auxTreatment.active == "1"
+                                && intent.getStringExtra("specialty") == auxTreatment.specialty ){
+                                requestsList.add(auxTreatment)
+                            }
                         }
                     }
                     adapter.notifyDataSetChanged()

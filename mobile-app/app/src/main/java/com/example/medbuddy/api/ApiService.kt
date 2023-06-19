@@ -80,6 +80,21 @@ interface ApiService {
         @Field("specialty") phoneNumber: String,
     ): Call<String>
 
+    @FormUrlEncoded
+    @POST("/acceptRequest")
+    fun acceptRequest(
+        @Field("requestID") requestID: String?,
+        @Field("diagnostic") diagnostic: String,
+        @Field("medication") medication: String,
+        @Field("doctorID") doctorID: String?
+    ): Call<String>
+
+    @FormUrlEncoded
+    @POST("/declineRequest")
+    fun declineRequest(
+        @Field("requestID") requestID: String?
+    ): Call<String>
+
     @POST("/logout")
     fun logout(): Call<ResponseBody>
 }

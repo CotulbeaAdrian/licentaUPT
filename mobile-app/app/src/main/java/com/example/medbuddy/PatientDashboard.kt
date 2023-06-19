@@ -226,7 +226,6 @@ class PatientDashboard : AppCompatActivity() {
 
                             if(auxTreatment.accepted == "1" && auxTreatment.active == "1"){
                                 treatmentList.add(auxTreatment)
-                                println(auxTreatment)
                             }
                         }
                     }

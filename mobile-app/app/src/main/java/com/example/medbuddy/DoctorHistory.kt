@@ -14,11 +14,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PatientHistory : AppCompatActivity() {
+class DoctorHistory : AppCompatActivity() {
 
     private lateinit var treatmentRecyclerView: RecyclerView
     private lateinit var treatmentList: ArrayList<MedicalRecord>
-    private lateinit var adapter: PatientHistoryAdapter
+    private lateinit var adapter: DoctorHistoryAdapter
 
     private lateinit var back: ImageView
 
@@ -34,14 +34,14 @@ class PatientHistory : AppCompatActivity() {
         }
 
         treatmentList = ArrayList()
-        adapter = PatientHistoryAdapter(this, treatmentList)
+        adapter = DoctorHistoryAdapter(this, treatmentList)
         treatmentRecyclerView = findViewById(R.id.treatmentHistoryRecyclerView)
         treatmentRecyclerView.layoutManager = LinearLayoutManager(this)
         treatmentRecyclerView.adapter = adapter
 
         val apiService = ApiServiceBuilder.apiService
         val userData = SharedPrefUtil.getUserData(applicationContext)
-        val call = apiService.getMedicalRecordsAsPatient(userData.id)
+        val call = apiService.getMedicalRecordsAsDoctor(userData.id)
 
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
