@@ -34,6 +34,15 @@ interface ApiService {
     ): Call<String>
 
     @FormUrlEncoded
+    @POST("/updateDoctor")
+    fun updateDoctor(
+        @Field("id") id: String,
+        @Field("fullName") fullName: String,
+        @Field("phoneNumber") phoneNumber: String,
+        @Field("specialty") age: String
+    ): Call<String>
+
+    @FormUrlEncoded
     @POST("/getName")
     fun getName(
         @Field("id") id: String
@@ -51,10 +60,8 @@ interface ApiService {
         @Field("id") email: String
     ): Call<String>
 
-    @FormUrlEncoded
-    @POST("/getMedicalRecordsByID")
-    fun getMedicalRecordsByID(
-        @Field("id") id: String
+    @POST("/getMedicalRecords")
+    fun getMedicalRecords(
     ): Call<String>
 
     @FormUrlEncoded
@@ -110,7 +117,7 @@ interface ApiService {
     @FormUrlEncoded
     @POST("/editMedication")
     fun editMedication(
-        @Field("id") id: String?,
+        @Field("requestID") requestID: String?,
         @Field("medication") medication: String?
     ): Call<String>
 

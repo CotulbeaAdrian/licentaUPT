@@ -171,11 +171,18 @@ class DoctorInteraction : AppCompatActivity() {
 
         sendButton.setOnClickListener {
             val message = messageBox.text.toString()
-            val aux2Call = apiService.sendMessage(interactionID, patientID, doctorID, message)
+            val aux2Call = apiService.sendMessage(interactionID, doctorID, patientID, message)
             aux2Call.enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     if (response.isSuccessful) {
-                        Toast.makeText(applicationContext, "Message sent.", Toast.LENGTH_SHORT).show()
+                        val auxMessage = Message(
+                            message,
+                            doctorID.orEmpty(),
+                            patientID.orEmpty(),
+                            interactionID.orEmpty()
+                        )
+                        messageList.add(auxMessage)
+                        messageAdapter.notifyDataSetChanged()
                     } else {
                         println("Message failed to be sent. Response code: ${response.code()}")
                         Toast.makeText(applicationContext, "Message failed to be sent.", Toast.LENGTH_SHORT).show()
@@ -203,6 +210,7 @@ class DoctorInteraction : AppCompatActivity() {
 
             mDialog.findViewById<LinearLayout>(R.id.layoutEditMedicationSave).setOnClickListener{
                 val newMedication = mDialog.findViewById<EditText>(R.id.editMedication).text.toString()
+                println(newMedication)
                 val editCall = apiService.editMedication(interactionID, newMedication)
                 editCall.enqueue(object : Callback<String> {
                     override fun onResponse(call: Call<String>, response: Response<String>) {

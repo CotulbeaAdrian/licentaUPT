@@ -1,0 +1,8 @@
+-- Create UserDetails table
+CREATE TABLE userDetails (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  userId INT,
+  age INT,
+  gender VARCHAR(255),
+  weight VARCHAR(10)
+);

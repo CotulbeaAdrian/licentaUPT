@@ -1,0 +1,10 @@
+CREATE TABLE appointment (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  active INT default '1',
+  accepted INT default '0',
+  date VARCHAR(255),
+  location VARCHAR(255),
+  doctorID INT,
+  patientID INT,
+  specialty VARCHAR(255)
+);

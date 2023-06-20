@@ -1,5 +1,6 @@
 package com.example.medbuddy
 
+import SharedDoctorSpecialty
 import SharedPrefUtil
 import android.app.*
 import android.content.Intent
@@ -19,7 +20,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class DoctorDashboard : AppCompatActivity() {
 
@@ -44,20 +44,15 @@ class DoctorDashboard : AppCompatActivity() {
         val userData = SharedPrefUtil.getUserData(applicationContext)
 
         title = findViewById(R.id.doctorDashboardTitle)
-        if (intent.getStringExtra("fullName") != null) {
-            title.text = "Dr. " + userData.fullName
-        } else {
-            title.text = ""
-        }
+        title.text = "Dr. " + userData.fullName
 
-        var specialty = ""
         val specialtyCall = apiService.getSpecialty(userData.id)
         specialtyCall.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     val aux = responseBody?.split("=")
-                    specialty = aux?.get(1).toString()
+                    SharedDoctorSpecialty.saveSpecialty(applicationContext,aux?.get(1).toString())
                 } else {
                     Toast.makeText(applicationContext, "Choose a specialty in Settings -> Edit Profile!!", Toast.LENGTH_SHORT).show()
                 }
@@ -67,7 +62,9 @@ class DoctorDashboard : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
             }
         })
-        println(specialty)
+
+        val specialty = SharedDoctorSpecialty.getSpecialty(applicationContext)
+
 
         appointments = findViewById(R.id.layoutAppointments)
         appointments.setOnClickListener {
@@ -124,7 +121,7 @@ class DoctorDashboard : AppCompatActivity() {
                             val symptom = treatmentDataMap["symptom"]
                             val diagnostic = treatmentDataMap["diagnostic"]
                             val medication = treatmentDataMap["medication"]
-                            val specialty = treatmentDataMap["specialty"]
+                            val specialtyAux = treatmentDataMap["specialty"]
 
                             // Create MedicalRecord object
                             val auxTreatment = MedicalRecord(
@@ -136,7 +133,7 @@ class DoctorDashboard : AppCompatActivity() {
                                 symptom.orEmpty(),
                                 diagnostic.orEmpty(),
                                 medication.orEmpty(),
-                                specialty.orEmpty()
+                                specialtyAux.orEmpty()
                             )
 
                             if(auxTreatment.accepted == "1" && auxTreatment.active == "1"){
@@ -156,83 +153,90 @@ class DoctorDashboard : AppCompatActivity() {
             }
         })
 
-//        val settingsButton = findViewById<ImageView>(R.id.settingsDoctor)
-//        settingsButton.setOnClickListener {
-//            mDialog = Dialog(this)
-//            mDialog.setContentView(R.layout.pop_up_settings)
-//            mDialog.setTitle("Pop-up Window")
-//            mDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//            mDialog.window!!.setLayout(
-//                ViewGroup.LayoutParams.WRAP_CONTENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT
-//            )
-//            val logoutButton = mDialog.findViewById<Button>(R.id.btnLogout)
-//            logoutButton.setOnClickListener {
-//                startActivity(Intent(this, Login::class.java))
-//                finish()
-//                mDialog.dismiss()
-//            }
-//            val editProfileButton = mDialog.findViewById<Button>(R.id.btnEditProfile)
-//            editProfileButton.setOnClickListener {
-//                mDialog.dismiss()
-//
-//                mnDialog = Dialog(this)
-//                mnDialog.setContentView(R.layout.doctor_edit_profile)
-//                mnDialog.setTitle("Pop-up Window")
-//                mnDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//                mnDialog.window!!.setLayout(
-//                    ViewGroup.LayoutParams.WRAP_CONTENT,
-//                    ViewGroup.LayoutParams.WRAP_CONTENT
-//                )
-//                val fullName = mnDialog.findViewById<TextInputLayout>(R.id.editfullName)
-//                val phoneNumber = mnDialog.findViewById<TextInputLayout>(R.id.editphoneNumber)
-//                val editData = mnDialog.findViewById<Button>(R.id.editData)
-//                val spinner = mnDialog.findViewById<Spinner>(R.id.editspinner)
-//                val adapter = ArrayAdapter.createFromResource(
-//                    this, R.array.medical_specialties, android.R.layout.simple_spinner_item
-//                )
-//                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//                spinner.adapter = adapter
-//                spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//                    override fun onItemSelected(
-//                        parent: AdapterView<*>?, view: View?, position: Int, id: Long
-//                    ) {
-//                    }
-//
-//                    override fun onNothingSelected(parent: AdapterView<*>?) {
-//                        // Do nothing
-//                    }
-//                }
-//                editData.setOnClickListener {
-//                    val sdFullName = fullName.editText?.text.toString()
-//                    val sdSpeciality = spinner.selectedItem.toString()
-//                    val sdPhoneNumber = phoneNumber.editText?.text.toString()
-//                    if (sdFullName.isEmpty() || sdPhoneNumber.isEmpty()) {
-//                        if (sdFullName.isEmpty()) {
-//                            fullName.error = "Please enter your Full Name"
-//                        }
-//                        if (sdPhoneNumber.isEmpty()) {
-//                            phoneNumber.error = "Please enter your phone number"
-//                        }
-//                        Toast.makeText(this, "Please check your fields", Toast.LENGTH_SHORT).show()
-//                    } else if (sdPhoneNumber.length != 10) {
-//                        phoneNumber.error = "Please enter 10 digits"
-//                        Toast.makeText(this, "Please enter 10 digits ", Toast.LENGTH_SHORT).show()
-//                    } else {
-//                        val userReference =
-//                            database.reference.child("Users").child(auth.currentUser!!.uid)
-//                        val updates = HashMap<String, Any>()
-//                        updates["fullName"] = sdFullName
-//                        updates["phoneNumber"] = sdPhoneNumber
-//                        updates["specialty"] = sdSpeciality
-//                        userReference.updateChildren(updates)
-//                        mnDialog.dismiss()
-//                        Toast.makeText(this, "Your data has been changed", Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-//                mnDialog.show()
-//            }
-//            mDialog.show()
-//        }
+        val settingsButton = findViewById<ImageView>(R.id.settingsDoctor)
+        settingsButton.setOnClickListener {
+            mDialog = Dialog(this)
+            mDialog.setContentView(R.layout.pop_up_settings)
+            mDialog.setTitle("Pop-up Window")
+            mDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            mDialog.window!!.setLayout(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            val logoutButton = mDialog.findViewById<Button>(R.id.btnLogout)
+            logoutButton.setOnClickListener {
+                SharedPrefUtil.clearUserData(applicationContext)
+                startActivity(Intent(this, Login::class.java))
+                finish()
+                mDialog.dismiss()
+            }
+            val editProfileButton = mDialog.findViewById<Button>(R.id.btnEditProfile)
+            editProfileButton.setOnClickListener {
+                mDialog.dismiss()
+
+                mnDialog = Dialog(this)
+                mnDialog.setContentView(R.layout.doctor_edit_profile)
+                mnDialog.setTitle("Pop-up Window")
+                mnDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                mnDialog.window!!.setLayout(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                val fullName = mnDialog.findViewById<TextInputLayout>(R.id.editfullName)
+                val phoneNumber = mnDialog.findViewById<TextInputLayout>(R.id.editphoneNumber)
+                val editData = mnDialog.findViewById<Button>(R.id.editData)
+                val spinner = mnDialog.findViewById<Spinner>(R.id.editspinner)
+                val adapter = ArrayAdapter.createFromResource(
+                    this, R.array.medical_specialties, android.R.layout.simple_spinner_item
+                )
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinner.adapter = adapter
+                spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?, view: View?, position: Int, id: Long
+                    ) {
+                    }
+                    override fun onNothingSelected(parent: AdapterView<*>?) {
+                        // Do nothing
+                    }
+                }
+                editData.setOnClickListener {
+                    val sdFullName = fullName.editText?.text.toString()
+                    val sdSpeciality = spinner.selectedItem.toString()
+                    val sdPhoneNumber = phoneNumber.editText?.text.toString()
+                    if (sdFullName.isEmpty() || sdPhoneNumber.isEmpty()) {
+                        if (sdFullName.isEmpty()) {
+                            fullName.error = "Please enter your Full Name"
+                        }
+                        if (sdPhoneNumber.isEmpty()) {
+                            phoneNumber.error = "Please enter your phone number"
+                        }
+                        Toast.makeText(this, "Please check your fields", Toast.LENGTH_SHORT).show()
+                    } else if (sdPhoneNumber.length != 10) {
+                        phoneNumber.error = "Please enter 10 digits"
+                        Toast.makeText(this, "Please enter 10 digits ", Toast.LENGTH_SHORT).show()
+                    } else {
+                        val updateCall = apiService.updateDoctor(userData.id, sdFullName, sdPhoneNumber, sdSpeciality)
+                        updateCall.enqueue(object : Callback<String> {
+                            override fun onResponse(call: Call<String>, response: Response<String>) {
+                                if (response.isSuccessful) {
+                                    Toast.makeText(applicationContext, "Your data has been changed", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(applicationContext, "Update failed", Toast.LENGTH_SHORT).show()
+                                }
+                                mnDialog.dismiss()
+                            }
+                            override fun onFailure(call: Call<String>, t: Throwable) {
+                                println("Update request failed. Error: ${t.message}")
+                                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                            }
+                        })
+
+                    }
+                }
+                mnDialog.show()
+            }
+            mDialog.show()
+        }
     }
 }

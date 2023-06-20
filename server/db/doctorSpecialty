@@ -1,0 +1,6 @@
+-- Create doctorSpecialty table
+CREATE TABLE doctorSpecialty (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  doctorID INT,
+  doctorSpecialty VARCHAR(255),
+);

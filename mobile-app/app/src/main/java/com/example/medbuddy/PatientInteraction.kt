@@ -189,7 +189,14 @@ class PatientInteraction : AppCompatActivity(){
             aux2Call.enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     if (response.isSuccessful) {
-                        Toast.makeText(applicationContext, "Message sent.", Toast.LENGTH_SHORT).show()
+                        val auxMessage = Message(
+                            message,
+                            patientID.orEmpty(),
+                            doctorID.orEmpty(),
+                            interactionID.orEmpty()
+                        )
+                        messageList.add(auxMessage)
+                        messageAdapter.notifyDataSetChanged()
                     } else {
                         println("Message failed to be sent. Response code: ${response.code()}")
                         Toast.makeText(applicationContext, "Message failed to be sent.", Toast.LENGTH_SHORT).show()

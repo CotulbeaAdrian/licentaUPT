@@ -1,5 +1,6 @@
 package com.example.medbuddy
 
+import SharedDoctorSpecialty
 import SharedPrefUtil
 import android.content.Intent
 import android.os.Bundle
@@ -26,6 +27,7 @@ class RequestsList : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val userData = SharedPrefUtil.getUserData(applicationContext)
+        val specialty = SharedDoctorSpecialty.getSpecialty(applicationContext)
         val apiService = ApiServiceBuilder.apiService
 
         setContentView(R.layout.request_list)
@@ -42,7 +44,7 @@ class RequestsList : AppCompatActivity() {
         treatmentRecyclerView.layoutManager = LinearLayoutManager(this)
         treatmentRecyclerView.adapter = adapter
 
-        val call = apiService.getMedicalRecordsAsDoctor(userData.id)
+        val call = apiService.getMedicalRecords()
 
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -72,7 +74,7 @@ class RequestsList : AppCompatActivity() {
                             val symptom = treatmentDataMap["symptom"]
                             val diagnostic = treatmentDataMap["diagnostic"]
                             val medication = treatmentDataMap["medication"]
-                            val specialty = treatmentDataMap["specialty"]
+                            val specialtyAux = treatmentDataMap["specialty"]
 
                             // Create MedicalRecord object
                             val auxTreatment = MedicalRecord(
@@ -84,11 +86,12 @@ class RequestsList : AppCompatActivity() {
                                 symptom.orEmpty(),
                                 diagnostic.orEmpty(),
                                 medication.orEmpty(),
-                                specialty.orEmpty()
+                                specialtyAux.orEmpty()
                             )
-
+                            println(specialty + " " + auxTreatment.accepted + " " + auxTreatment.active)
                             if(auxTreatment.accepted == "0" && auxTreatment.active == "1"
-                                && intent.getStringExtra("specialty") == auxTreatment.specialty ){
+                                && specialty == auxTreatment.specialty ){
+                                println(specialty + " " + auxTreatment.accepted + " " + auxTreatment.active)
                                 requestsList.add(auxTreatment)
                             }
                         }
