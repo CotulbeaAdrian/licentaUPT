@@ -17,7 +17,7 @@ object SharedDoctorSpecialty {
         return sharedPrefs.getString(KEY_SPECIALTY, "") ?: "";
     }
 
-    fun clearSpecialtymedic(context: Context) {
+    fun clearSpecialtyMedic(context: Context) {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = sharedPrefs.edit()
         editor.remove(KEY_SPECIALTY)

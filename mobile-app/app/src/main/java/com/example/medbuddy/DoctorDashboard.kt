@@ -166,6 +166,7 @@ class DoctorDashboard : AppCompatActivity() {
             val logoutButton = mDialog.findViewById<Button>(R.id.btnLogout)
             logoutButton.setOnClickListener {
                 SharedPrefUtil.clearUserData(applicationContext)
+                SharedDoctorSpecialty.clearSpecialtyMedic(applicationContext)
                 startActivity(Intent(this, Login::class.java))
                 finish()
                 mDialog.dismiss()

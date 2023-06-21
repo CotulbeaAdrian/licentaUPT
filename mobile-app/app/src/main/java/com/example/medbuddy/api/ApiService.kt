@@ -22,6 +22,8 @@ interface ApiService {
         @Field("role") role: String
     ): Call<String>
 
+    // ....
+
     @FormUrlEncoded
     @POST("/updateProfile")
     fun updateProfile(
