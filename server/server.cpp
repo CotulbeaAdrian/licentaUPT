@@ -597,7 +597,7 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                     response_aux << "symptom=" << symptom << std::endl;
                     response_aux << "diagnostic=" << diagnostic << std::endl;
                     response_aux << "medication=" << medication << std::endl;
-                    response_aux << "specialty=" << specialty << std::endl;
+                    response_aux << "specialty=" << specialty << "&" << std::endl;
 
                     response_header += success;
                     response_body += response_aux.str();
