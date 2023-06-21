@@ -5,11 +5,15 @@
 #include <mysql_driver.h>
 #include <mysql_connection.h>
 #include <cppconn/prepared_statement.h>
-#include <cstring> // Include the <cstring> header for strlen
 #include <iomanip> // Include the <iomanip> header for std::hex and std::isdigit
 
 using namespace asio;
 using namespace asio::ip;
+
+std::string success = "HTTP/1.1 200 OK\r\n";
+std::string unauthorized = "HTTP/1.1 401 Unauthorized\r\n";
+std::string internalError = "HTTP/1.1 500 Internal Server Error\r\n";
+std::string badRequest = "HTTP/1.1 400 Bad Request";
 
 // URL decode function
 std::string urlDecode(std::string &SRC)
@@ -102,21 +106,21 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                 pstmt->execute();
 
                 // Build the response body
-                response_header += "HTTP/1.1 200 OK\r\n";
+                response_header += success;
                 response_body = "User registered successfully";
 
                 delete con;
             }
             catch (std::exception &e)
             {
-                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_header += internalError;
                 std::cerr << "Registration failed: " << e.what() << std::endl;
                 response_body = "Registration failed";
             }
         }
         else
         {
-            response_header += "HTTP/1.1 400 Bad Request";
+            response_header += badRequest;
             response_body = "Invalid register request";
         }
     }
@@ -177,13 +181,13 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                     response_aux << "phoneNumber=" << phoneNumber << std::endl;
                     response_aux << "role=" << role << std::endl;
 
-                    response_header += "HTTP/1.1 200 OK\r\n";
+                    response_header += success;
                     response_body = response_aux.str();
                 }
                 else
                 {
                     // User not found or invalid credentials
-                    response_header += "HTTP/1.1 401 Unauthorized\r\n";
+                    response_header += unauthorized;
                     response_body = "Invalid email or password";
                 }
 
@@ -193,13 +197,13 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
             catch (std::exception &e)
             {
                 std::cerr << "Login request failed: " << e.what() << std::endl;
-                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_header += internalError;
                 response_body = "Login request failed";
             }
         }
         else
         {
-            response_header += "HTTP/1.1 400 Bad Request";
+            response_header += badRequest;
             response_body = "Invalid login request";
         }
     }
@@ -279,21 +283,21 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                 }
 
                 // Build the response body
-                response_header += "HTTP/1.1 200 OK\r\n";
+                response_header += success;
                 response_body = "Profile updated successfully";
 
                 delete con;
             }
             catch (std::exception &e)
             {
-                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_header += internalError;
                 std::cerr << "Update failed: " << e.what() << std::endl;
                 response_body = "Update failed";
             }
         }
         else
         {
-            response_header += "HTTP/1.1 400 Bad Request";
+            response_header += badRequest;
             response_body = "Invalid update request";
         }
     }
@@ -359,21 +363,21 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                 }
 
                 // Build the response body
-                response_header += "HTTP/1.1 200 OK\r\n";
+                response_header += success;
                 response_body = "Profile updated successfully";
 
                 delete con;
             }
             catch (std::exception &e)
             {
-                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_header += internalError;
                 std::cerr << "Update failed: " << e.what() << std::endl;
                 response_body = "Update failed";
             }
         }
         else
         {
-            response_header += "HTTP/1.1 400 Bad Request";
+            response_header += badRequest;
             response_body = "Invalid update request";
         }
     }
@@ -437,14 +441,14 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                         response_aux << "medication=" << medication << std::endl;
                         response_aux << "specialty=" << specialty << "&" << std::endl;
 
-                        response_header += "HTTP/1.1 200 OK\r\n";
+                        response_header += success;
                         response_body += response_aux.str();
                     } while (res->next());
                 }
                 else
                 {
                     // User not found or invalid credentials
-                    response_header += "HTTP/1.1 401 Unauthorized\r\n";
+                    response_header += unauthorized;
                     response_body = "Invalid id";
                 }
 
@@ -454,13 +458,13 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
             catch (std::exception &e)
             {
                 std::cerr << "Data request failed: " << e.what() << std::endl;
-                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_header += internalError;
                 response_body = "Data request failed";
             }
         }
         else
         {
-            response_header += "HTTP/1.1 400 Bad Request";
+            response_header += badRequest;
             response_body = "Invalid data request";
         }
     }
@@ -524,14 +528,14 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                         response_aux << "medication=" << medication << std::endl;
                         response_aux << "specialty=" << specialty << "&" << std::endl;
 
-                        response_header += "HTTP/1.1 200 OK\r\n";
+                        response_header += success;
                         response_body += response_aux.str();
                     } while (res->next());
                 }
                 else
                 {
                     // User not found or invalid credentials
-                    response_header += "HTTP/1.1 401 Unauthorized\r\n";
+                    response_header += unauthorized;
                     response_body = "Invalid id";
                 }
 
@@ -541,13 +545,13 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
             catch (std::exception &e)
             {
                 std::cerr << "Data request failed: " << e.what() << std::endl;
-                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_header += internalError;
                 response_body = "Data request failed";
             }
         }
         else
         {
-            response_header += "HTTP/1.1 400 Bad Request";
+            response_header += badRequest;
             response_body = "Invalid data request";
         }
     }
@@ -595,14 +599,14 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                     response_aux << "medication=" << medication << std::endl;
                     response_aux << "specialty=" << specialty << std::endl;
 
-                    response_header += "HTTP/1.1 200 OK\r\n";
+                    response_header += success;
                     response_body += response_aux.str();
                 } while (res->next());
             }
             else
             {
                 // User not found or invalid credentials
-                response_header += "HTTP/1.1 401 Unauthorized\r\n";
+                response_header += unauthorized;
                 response_body = "Invalid id";
             }
 
@@ -612,7 +616,7 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
         catch (std::exception &e)
         {
             std::cerr << "Data request failed: " << e.what() << std::endl;
-            response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+            response_header += internalError;
             response_body = "Data request failed";
         }
     }
@@ -656,14 +660,14 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                         // Retrieve the user's ID and username
                         std::string fullName = res->getString("fullName");
 
-                        response_header += "HTTP/1.1 200 OK\r\n";
+                        response_header += success;
                         response_body = "fullName=" + fullName + "\n";
                     } while (res->next());
                 }
                 else
                 {
                     // User not found or invalid credentials
-                    response_header += "HTTP/1.1 401 Unauthorized\r\n";
+                    response_header += unauthorized;
                     response_body = "Invalid id";
                 }
 
@@ -673,13 +677,13 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
             catch (std::exception &e)
             {
                 std::cerr << "Data request failed: " << e.what() << std::endl;
-                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_header += internalError;
                 response_body = "Data request failed";
             }
         }
         else
         {
-            response_header += "HTTP/1.1 400 Bad Request";
+            response_header += badRequest;
             response_body = "Invalid data request";
         }
     }
@@ -729,21 +733,21 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                 pstmt->execute();
 
                 // Build the response body
-                response_header += "HTTP/1.1 200 OK\r\n";
+                response_header += success;
                 response_body = "Request created";
 
                 delete con;
             }
             catch (std::exception &e)
             {
-                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_header += internalError;
                 std::cerr << "Request creation failed: " << e.what() << std::endl;
                 response_body = "Request creation failed";
             }
         }
         else
         {
-            response_header += "HTTP/1.1 400 Bad Request";
+            response_header += badRequest;
             response_body = "Invalid request create request";
         }
     }
@@ -798,21 +802,21 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                 pstmt->execute();
 
                 // Build the response body
-                response_header += "HTTP/1.1 200 OK\r\n";
+                response_header += success;
                 response_body = "Request created";
 
                 delete con;
             }
             catch (std::exception &e)
             {
-                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_header += internalError;
                 std::cerr << "Send message failed: " << e.what() << std::endl;
                 response_body = "Send message failed";
             }
         }
         else
         {
-            response_header += "HTTP/1.1 400 Bad Request";
+            response_header += badRequest;
             response_body = "Invalid request send message";
         }
     }
@@ -866,14 +870,14 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                         response_aux << "senderID=" << senderID << std::endl;
                         response_aux << "message=" << message << "&" << std::endl;
 
-                        response_header += "HTTP/1.1 200 OK\r\n";
+                        response_header += success;
                         response_body += response_aux.str();
                     } while (res->next());
                 }
                 else
                 {
                     // User not found or invalid credentials
-                    response_header += "HTTP/1.1 401 Unauthorized\r\n";
+                    response_header += unauthorized;
                     response_body = "Invalid roomID and receiverID";
                 }
 
@@ -883,13 +887,13 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
             catch (std::exception &e)
             {
                 std::cerr << "Data request failed: " << e.what() << std::endl;
-                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_header += internalError;
                 response_body = "Messages request failed";
             }
         }
         else
         {
-            response_header += "HTTP/1.1 400 Bad Request";
+            response_header += badRequest;
             response_body = "Invalid messages request";
         }
     }
@@ -942,21 +946,21 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                 stmt->executeQuery();
 
                 // Build the response body
-                response_header += "HTTP/1.1 200 OK\r\n";
+                response_header += success;
                 response_body = "Accepted request successfully";
 
                 delete con;
             }
             catch (std::exception &e)
             {
-                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_header += internalError;
                 std::cerr << "Accept failed: " << e.what() << std::endl;
                 response_body = "Accept request failed";
             }
         }
         else
         {
-            response_header += "HTTP/1.1 400 Bad Request";
+            response_header += badRequest;
             response_body = "Invalid accept request";
         }
     }
@@ -994,21 +998,21 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                 stmt->executeQuery();
 
                 // Build the response body
-                response_header += "HTTP/1.1 200 OK\r\n";
+                response_header += success;
                 response_body = "Declined request successfully";
 
                 delete con;
             }
             catch (std::exception &e)
             {
-                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_header += internalError;
                 std::cerr << "Decline failed: " << e.what() << std::endl;
                 response_body = "Decline request failed";
             }
         }
         else
         {
-            response_header += "HTTP/1.1 400 Bad Request";
+            response_header += badRequest;
             response_body = "Invalid decline request";
         }
     }
@@ -1057,13 +1061,13 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                     response_aux << "weight=" << weight << std::endl;
                     response_aux << "gender=" << gender << std::endl;
 
-                    response_header += "HTTP/1.1 200 OK\r\n";
+                    response_header += success;
                     response_body = response_aux.str();
                 }
                 else
                 {
                     // User not found or invalid credentials
-                    response_header += "HTTP/1.1 401 Unauthorized\r\n";
+                    response_header += unauthorized;
                     response_body = "Invalid id";
                 }
 
@@ -1073,13 +1077,13 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
             catch (std::exception &e)
             {
                 std::cerr << "Details request failed: " << e.what() << std::endl;
-                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_header += internalError;
                 response_body = "Details request failed";
             }
         }
         else
         {
-            response_header += "HTTP/1.1 400 Bad Request";
+            response_header += badRequest;
             response_body = "Invalid details request";
         }
     }
@@ -1117,21 +1121,21 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                 stmt->execute();
 
                 // Build the response body
-                response_header += "HTTP/1.1 200 OK\r\n";
+                response_header += success;
                 response_body = "Ended medication successfully";
 
                 delete con;
             }
             catch (std::exception &e)
             {
-                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_header += internalError;
                 std::cerr << "End medication failed: " << e.what() << std::endl;
                 response_body = "End medication failed";
             }
         }
         else
         {
-            response_header += "HTTP/1.1 400 Bad Request";
+            response_header += badRequest;
             response_body = "Invalid end medication request";
         }
     }
@@ -1174,21 +1178,21 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                 stmt->execute();
 
                 // Build the response body
-                response_header += "HTTP/1.1 200 OK\r\n";
+                response_header += success;
                 response_body = "Medication changed successfully";
 
                 delete con;
             }
             catch (std::exception &e)
             {
-                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_header += internalError;
                 std::cerr << "Medication change failed: " << e.what() << std::endl;
                 response_body = "Medication change failed";
             }
         }
         else
         {
-            response_header += "HTTP/1.1 400 Bad Request";
+            response_header += badRequest;
             response_body = "Invalid medication change request";
         }
     }
@@ -1229,13 +1233,13 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                 {
                     std::string doctorSpecialty = res->getString("doctorSpecialty");
 
-                    response_header += "HTTP/1.1 200 OK\r\n";
+                    response_header += success;
                     response_body = "doctorSpecialty=" + doctorSpecialty + "\n";
                 }
                 else
                 {
                     // User not found or invalid credentials
-                    response_header += "HTTP/1.1 401 Unauthorized\r\n";
+                    response_header += unauthorized;
                     response_body = "Invalid id";
                 }
 
@@ -1245,13 +1249,13 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
             catch (std::exception &e)
             {
                 std::cerr << "Specialty request failed: " << e.what() << std::endl;
-                response_header += "HTTP/1.1 500 Internal Server Error\r\n";
+                response_header += internalError;
                 response_body = "Specialty request failed";
             }
         }
         else
         {
-            response_header += "HTTP/1.1 400 Bad Request";
+            response_header += badRequest;
             response_body = "Invalid specialty request";
         }
     }

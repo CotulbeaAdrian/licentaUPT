@@ -1,5 +1,7 @@
 version: '3'
+
 services:
+  # MedBuddy server service
   medbuddy-sv:
     build:
       context: .
@@ -8,6 +10,9 @@ services:
       - 8080:8080
     depends_on:
       - medbuddy-db
+    restart: always  # Restart the service automatically if it stops unexpectedly
+
+  # MedBuddy database service
   medbuddy-db:
     image: mysql:latest
     ports:
@@ -20,7 +25,9 @@ services:
       MYSQL_USER_HOST: "%"
     volumes:
       - mysql-data:/var/lib/mysql
+    restart: always  # Restart the service automatically if it stops unexpectedly
 
 volumes:
+  # Empty volume for MySQL data persistence
   mysql-data:
 

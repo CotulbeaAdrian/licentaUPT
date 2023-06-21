@@ -17,16 +17,13 @@ class MainActivity : AppCompatActivity() {
     private val splashScreen = 4000
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.splash)
-
         val image = findViewById<ImageView>(R.id.medbuddy_image)
         val title = findViewById<TextView>(R.id.medbuddy_title)
         val tagline = findViewById<TextView>(R.id.medbuddy_tagline)
-
         val topAnim = AnimationUtils.loadAnimation(this, R.anim.top_animation)
         val botAnim = AnimationUtils.loadAnimation(this, R.anim.bot_animation)
 

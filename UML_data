@@ -1,0 +1,25 @@
+<mxfile host="app.diagrams.net" modified="2023-06-21T04:02:49.531Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="PWyIx4_Q5TO_H0ZuTsXe" version="21.5.0" type="device">
+  <diagram id="mJ_uFeSypwTtRdBFZl5e" name="Page-1">
+    <mxGraphModel dx="1234" dy="994" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Ex6dGjMhvy4UECpnhrKr-3" style="edgeStyle=orthogonalEdgeStyle;shape=connector;curved=1;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=#FFFFFF;strokeColor=#000000;fontFamily=Helvetica;fontSize=11;fontColor=#000000;endArrow=classic;fillColor=#f5f5f5;" parent="1" source="rF2bkxDkq0wCOAMEIuim-13" target="Ex6dGjMhvy4UECpnhrKr-2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ex6dGjMhvy4UECpnhrKr-5" style="edgeStyle=orthogonalEdgeStyle;shape=connector;curved=1;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=#FFFFFF;strokeColor=#000000;fontFamily=Helvetica;fontSize=11;fontColor=#000000;endArrow=classic;fillColor=#f5f5f5;" parent="1" source="rF2bkxDkq0wCOAMEIuim-13" target="e6zjW89lG6MxGzFHgk7N-2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rF2bkxDkq0wCOAMEIuim-13" value="MySQL Server" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="170" y="450" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="e6zjW89lG6MxGzFHgk7N-2" value="MedBuddy Mobile App" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+          <mxGeometry x="550" y="450" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Ex6dGjMhvy4UECpnhrKr-2" value="C++&amp;nbsp; Web Server" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+          <mxGeometry x="360" y="450" width="120" height="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

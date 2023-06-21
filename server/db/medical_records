@@ -1,3 +1,4 @@
+-- Create medical_records table
 CREATE TABLE medical_records (
   id INT AUTO_INCREMENT PRIMARY KEY,
   active INT default '1',
