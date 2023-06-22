@@ -59,14 +59,14 @@ class Login : AppCompatActivity() {
 
                 val apiService = ApiServiceBuilder.apiService
                 // Make the login request
-                val call = apiService.login(email,password)
+                val call = apiService.login(email, password)
 
                 // Execute the request asynchronously
                 call.enqueue(object : Callback<String> {
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         if (response.isSuccessful) {
                             val responseBody = response.body()
-                            Log.d("INFO","Login successful.")
+                            Log.d("INFO", "Login successful.")
 
                             val lines = responseBody?.split("\n") ?: emptyList()
                             val userDataMap = mutableMapOf<String, String>()
@@ -97,27 +97,44 @@ class Login : AppCompatActivity() {
                             )
 
                             // Save user data to shared preferences
-                            SharedPrefUtil.saveUserData(applicationContext,userData)
+                            SharedPrefUtil.saveUserData(applicationContext, userData)
 
                             if (role.equals("Medic")) {
                                 val intent = Intent(applicationContext, DoctorDashboard::class.java)
                                 startActivity(intent)
-                                Toast.makeText(applicationContext, "Log in as Medic", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Log in as Medic",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             } else {
-                                val intent = Intent(applicationContext, PatientDashboard::class.java)
+                                val intent =
+                                    Intent(applicationContext, PatientDashboard::class.java)
                                 startActivity(intent)
-                                Toast.makeText(applicationContext, "Log in as Patient", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Log in as Patient",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
 
                         } else {
-                            Log.d("ERROR","Login failed. Response code: ${response.code()}")
-                            Toast.makeText(applicationContext, "Invalid email or password", Toast.LENGTH_SHORT).show()
+                            Log.d("ERROR", "Login failed. Response code: ${response.code()}")
+                            Toast.makeText(
+                                applicationContext,
+                                "Invalid email or password",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
 
                     override fun onFailure(call: Call<String>, t: Throwable) {
-                        Log.d("ERROR","Login request failed. Error: ${t.message}")
-                        Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                        Log.d("ERROR", "Login request failed. Error: ${t.message}")
+                        Toast.makeText(
+                            applicationContext,
+                            "Server error. Try again!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 })
             }

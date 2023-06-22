@@ -63,17 +63,29 @@ class RequestCreate : AppCompatActivity() {
                     if (response.isSuccessful) {
                         val intent = Intent(applicationContext, PatientDashboard::class.java)
                         startActivity(intent)
-                        Toast.makeText(applicationContext, "Request has been sent", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            applicationContext,
+                            "Request has been sent",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
                     } else {
-                        Log.d("ERROR","Request failed. Response code: ${response.code()}")
-                        Toast.makeText(applicationContext, "Request failed. Check the fields!", Toast.LENGTH_SHORT).show()
+                        Log.d("ERROR", "Request failed. Response code: ${response.code()}")
+                        Toast.makeText(
+                            applicationContext,
+                            "Request failed. Check the fields!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
-                    Log.d("ERROR","Create request failed. Error: ${t.message}")
-                    Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                    Log.d("ERROR", "Create request failed. Error: ${t.message}")
+                    Toast.makeText(
+                        applicationContext,
+                        "Server error. Try again!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
         }

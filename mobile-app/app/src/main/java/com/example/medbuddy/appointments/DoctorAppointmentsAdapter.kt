@@ -21,7 +21,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DoctorAppointmentsAdapter(val context: Context, private val appointmentsList: ArrayList<Appointment>) :
+class DoctorAppointmentsAdapter(
+    val context: Context,
+    private val appointmentsList: ArrayList<Appointment>
+) :
     RecyclerView.Adapter<DoctorAppointmentsAdapter.UserViewHolder>() {
 
     private lateinit var mDialog: Dialog
@@ -53,36 +56,57 @@ class DoctorAppointmentsAdapter(val context: Context, private val appointmentsLi
                             ViewGroup.LayoutParams.WRAP_CONTENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT
                         )
-                        val delete = mDialog.findViewById<LinearLayout>(R.id.layoutDeleteAppointment)
+                        val delete =
+                            mDialog.findViewById<LinearLayout>(R.id.layoutDeleteAppointment)
                         delete.setOnClickListener {
                             val auxCall = apiService.deleteAppointment(appointment.id)
                             auxCall.enqueue(object : Callback<String> {
-                                override fun onResponse(call: Call<String>, response: Response<String>) {
+                                override fun onResponse(
+                                    call: Call<String>,
+                                    response: Response<String>
+                                ) {
                                     if (response.isSuccessful) {
-                                        Log.d("INFO","Appointment deleted.")
-                                        Toast.makeText(context, "Appointment deleted", Toast.LENGTH_SHORT).show()
+                                        Log.d("INFO", "Appointment deleted.")
+                                        Toast.makeText(
+                                            context,
+                                            "Appointment deleted",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                         notifyDataSetChanged()
                                         mDialog.dismiss()
                                     } else {
-                                        Log.d("ERROR","Operation failed. Response code: ${response.code()}")
-                                        Toast.makeText(context, "Appointment delete failed. Check the fields!", Toast.LENGTH_SHORT).show()
+                                        Log.d(
+                                            "ERROR",
+                                            "Operation failed. Response code: ${response.code()}"
+                                        )
+                                        Toast.makeText(
+                                            context,
+                                            "Appointment delete failed. Check the fields!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }
                                 }
+
                                 override fun onFailure(call: Call<String>, t: Throwable) {
-                                    Log.d("ERROR","Appointment delete failed. Error: ${t.message}")
-                                    Toast.makeText(context, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                                    Log.d("ERROR", "Appointment delete failed. Error: ${t.message}")
+                                    Toast.makeText(
+                                        context,
+                                        "Server error. Try again!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             })
                         }
                         mDialog.show()
                     }
                 } else {
-                    Log.d("ERROR","Request failed. Response code: ${response.code()}")
+                    Log.d("ERROR", "Request failed. Response code: ${response.code()}")
                     Toast.makeText(context, "Patient ID not found!", Toast.LENGTH_SHORT).show()
                 }
             }
+
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("ERROR","Data request failed. Error: ${t.message}")
+                Log.d("ERROR", "Data request failed. Error: ${t.message}")
                 Toast.makeText(context, "Server error. Try again!", Toast.LENGTH_SHORT).show()
             }
         })

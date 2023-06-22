@@ -34,8 +34,10 @@ class MainActivity : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             val intent = Intent(this, Login::class.java)
-            val options = ActivityOptions.makeSceneTransitionAnimation(this, UtilPair.create(title, "logo_text"),
-                UtilPair.create(image, "logo_image"))
+            val options = ActivityOptions.makeSceneTransitionAnimation(
+                this, UtilPair.create(title, "logo_text"),
+                UtilPair.create(image, "logo_image")
+            )
             startActivity(intent, options.toBundle())
         }, splashScreen.toLong())
     }

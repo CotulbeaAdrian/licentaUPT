@@ -18,7 +18,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PatientAppointmentsAdapter(val context: Context, private val appointmentsList: ArrayList<Appointment>) :
+class PatientAppointmentsAdapter(
+    val context: Context,
+    private val appointmentsList: ArrayList<Appointment>
+) :
     RecyclerView.Adapter<PatientAppointmentsAdapter.UserViewHolder>() {
 
     private lateinit var mDialog: Dialog
@@ -53,12 +56,13 @@ class PatientAppointmentsAdapter(val context: Context, private val appointmentsL
                         mDialog.show()
                     }
                 } else {
-                    Log.d("ERROR","Request failed. Response code: ${response.code()}")
+                    Log.d("ERROR", "Name request failed. Response code: ${response.code()}")
                     Toast.makeText(context, "Doctor ID not found!", Toast.LENGTH_SHORT).show()
                 }
             }
+
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("ERROR","Data request failed. Error: ${t.message}")
+                Log.d("ERROR", "Name request failed. Error: ${t.message}")
                 Toast.makeText(context, "Server error. Try again!", Toast.LENGTH_SHORT).show()
             }
         })

@@ -54,7 +54,8 @@ class DoctorInteraction : AppCompatActivity() {
 
         val apiService = ApiServiceBuilder.apiService
 
-        findViewById<TextView>(R.id.patientTreatmentTitle).text= intent.getStringExtra("patientFullName")
+        findViewById<TextView>(R.id.patientTreatmentTitle).text =
+            intent.getStringExtra("patientFullName")
         findViewById<TextView>(R.id.symptom).text = symptom
         findViewById<TextView>(R.id.medication).text = medication
         findViewById<TextView>(R.id.diagnostic).text = diagnostic
@@ -84,7 +85,6 @@ class DoctorInteraction : AppCompatActivity() {
                 mDialog.dismiss()
                 mnDialog = Dialog(this)
                 mnDialog.setContentView(R.layout.pop_up_reminder_hour)
-                mnDialog.setTitle("Pop-up Window")
                 mnDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 mnDialog.window!!.setLayout(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -144,7 +144,7 @@ class DoctorInteraction : AppCompatActivity() {
                                 messageDataMap[key] = value
                             }
                         }
-                        if(messageDataMap["roomID"]?.isNotBlank() == true){
+                        if (messageDataMap["roomID"]?.isNotBlank() == true) {
                             val id = messageDataMap["roomID"]
                             val message = messageDataMap["message"]
                             val senderID = messageDataMap["senderID"]
@@ -161,13 +161,19 @@ class DoctorInteraction : AppCompatActivity() {
                     }
                     messageAdapter.notifyDataSetChanged()
                 } else {
-                    Log.d("ERROR","Receive messages failed. Response code: ${response.code()}")
-                    Toast.makeText(applicationContext, "Receive messages failed", Toast.LENGTH_SHORT).show()
+                    Log.d("ERROR", "Receive messages failed. Response code: ${response.code()}")
+                    Toast.makeText(
+                        applicationContext,
+                        "Receive messages failed",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
+
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("ERROR","Request failed. Error: ${t.message}")
-                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                Log.d("ERROR", "Request failed. Error: ${t.message}")
+                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
 
@@ -188,23 +194,33 @@ class DoctorInteraction : AppCompatActivity() {
                         messageList.add(auxMessage)
                         messageAdapter.notifyDataSetChanged()
                     } else {
-                        Log.d("ERROR","Message failed to be sent. Response code: ${response.code()}")
-                        Toast.makeText(applicationContext, "Message failed to be sent.", Toast.LENGTH_SHORT).show()
+                        Log.d(
+                            "ERROR",
+                            "Message failed to be sent. Response code: ${response.code()}"
+                        )
+                        Toast.makeText(
+                            applicationContext,
+                            "Message failed to be sent.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
-                    Log.d("ERROR","Message failed to be sent serverside. Error: ${t.message}")
-                    Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                    Log.d("ERROR", "Message failed to be sent serverside. Error: ${t.message}")
+                    Toast.makeText(
+                        applicationContext,
+                        "Server error. Try again!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
             messageBox.setText("")
         }
 
-        findViewById<LinearLayout>(R.id.layoutEditMedication).setOnClickListener{
+        findViewById<LinearLayout>(R.id.layoutEditMedication).setOnClickListener {
             mDialog = Dialog(this)
             mDialog.setContentView(R.layout.pop_up_edit_medication)
-            mDialog.setTitle("Pop-up Window")
             mDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             mDialog.window!!.setLayout(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -212,8 +228,9 @@ class DoctorInteraction : AppCompatActivity() {
             )
             mDialog.show()
 
-            mDialog.findViewById<LinearLayout>(R.id.layoutEditMedicationSave).setOnClickListener{
-                val newMedication = mDialog.findViewById<EditText>(R.id.editMedication).text.toString()
+            mDialog.findViewById<LinearLayout>(R.id.layoutEditMedicationSave).setOnClickListener {
+                val newMedication =
+                    mDialog.findViewById<EditText>(R.id.editMedication).text.toString()
                 val editCall = apiService.editMedication(interactionID, newMedication)
                 editCall.enqueue(object : Callback<String> {
                     override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -224,19 +241,30 @@ class DoctorInteraction : AppCompatActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else {
-                            Log.d("ERROR","Medication change failed. Response code: ${response.code()}")
-                            Toast.makeText(applicationContext, "Treatment change failed.", Toast.LENGTH_SHORT).show()
+                            Log.d(
+                                "ERROR",
+                                "Medication change failed. Response code: ${response.code()}"
+                            )
+                            Toast.makeText(
+                                applicationContext,
+                                "Treatment change failed.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
 
                     override fun onFailure(call: Call<String>, t: Throwable) {
-                        Log.d("ERROR","Medication change failed serverside. Error: ${t.message}")
-                        Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                        Log.d("ERROR", "Medication change failed serverside. Error: ${t.message}")
+                        Toast.makeText(
+                            applicationContext,
+                            "Server error. Try again!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 })
             }
 
-            mDialog.findViewById<ImageView>(R.id.backButtonMedication).setOnClickListener{
+            mDialog.findViewById<ImageView>(R.id.backButtonMedication).setOnClickListener {
                 mDialog.dismiss()
             }
         }
@@ -254,14 +282,22 @@ class DoctorInteraction : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
-                        Log.d("ERROR","Treatment end failed. Response code: ${response.code()}")
-                        Toast.makeText(applicationContext, "Treatment end failed.", Toast.LENGTH_SHORT).show()
+                        Log.d("ERROR", "Treatment end failed. Response code: ${response.code()}")
+                        Toast.makeText(
+                            applicationContext,
+                            "Treatment end failed.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
-                    Log.d("ERROR","Treatment end failed serverside. Error: ${t.message}")
-                    Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                    Log.d("ERROR", "Treatment end failed serverside. Error: ${t.message}")
+                    Toast.makeText(
+                        applicationContext,
+                        "Server error. Try again!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
         }

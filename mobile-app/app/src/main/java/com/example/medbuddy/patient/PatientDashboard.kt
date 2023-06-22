@@ -59,8 +59,8 @@ class PatientDashboard : AppCompatActivity() {
             startActivity(intent)
         }
 
-        appointment=findViewById(R.id.layoutAppointments)
-        appointment.setOnClickListener{
+        appointment = findViewById(R.id.layoutAppointments)
+        appointment.setOnClickListener {
             val intent = Intent(this, PatientAppointments::class.java)
             startActivity(intent)
         }
@@ -72,8 +72,8 @@ class PatientDashboard : AppCompatActivity() {
         treatmentRecyclerView.adapter = adapter
 
         val settingsButton = findViewById<ImageView>(R.id.settingsPatient)
-        settingsButton.setOnClickListener{
-            pDialog= Dialog(this)
+        settingsButton.setOnClickListener {
+            pDialog = Dialog(this)
             pDialog.setContentView(R.layout.pop_up_settings)
             pDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             pDialog.window!!.setLayout(
@@ -81,17 +81,17 @@ class PatientDashboard : AppCompatActivity() {
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
             val logoutButton = pDialog.findViewById<Button>(R.id.btnLogout)
-            logoutButton.setOnClickListener{
+            logoutButton.setOnClickListener {
                 SharedPrefUtil.clearUserData(applicationContext)
                 startActivity(Intent(this, Login::class.java))
                 finish()
                 pDialog.dismiss()
             }
             val editProfileButton = pDialog.findViewById<Button>(R.id.btnEditProfile)
-            editProfileButton.setOnClickListener{
+            editProfileButton.setOnClickListener {
                 pDialog.dismiss()
 
-                pnDialog= Dialog(this)
+                pnDialog = Dialog(this)
                 pnDialog.setContentView(R.layout.patient_edit_profile)
                 pnDialog.setTitle("Pop-up Window")
                 pnDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -128,9 +128,9 @@ class PatientDashboard : AppCompatActivity() {
                     val sdFullName = fullName.editText?.text.toString()
                     val sdGender = spinner.selectedItem.toString()
                     val sdPhoneNumber = phoneNumber.editText?.text.toString()
-                    val sdAge=age.editText?.text.toString()
-                    val sdWeight=weight.editText?.text.toString()
-                    if(sdFullName.isEmpty() || sdPhoneNumber.isEmpty()|| sdAge.isEmpty() || sdWeight.isEmpty()){
+                    val sdAge = age.editText?.text.toString()
+                    val sdWeight = weight.editText?.text.toString()
+                    if (sdFullName.isEmpty() || sdPhoneNumber.isEmpty() || sdAge.isEmpty() || sdWeight.isEmpty()) {
                         if (sdPhoneNumber.isEmpty()) {
                             phoneNumber.error = "Please enter your phone number"
                         }
@@ -144,33 +144,55 @@ class PatientDashboard : AppCompatActivity() {
                             weight.error = "Please enter your weight"
                         }
                         Toast.makeText(this, "Please fill every field.", Toast.LENGTH_SHORT).show()
-                    }
-                    else if (sdPhoneNumber.length != 10) {
+                    } else if (sdPhoneNumber.length != 10) {
                         phoneNumber.error = "Phone number must have exactly 10 digits."
-                    }
-                    else if (sdAge.length >2) {
+                    } else if (sdAge.length > 2) {
                         phoneNumber.error = "Please introduce an age between 18 and 99 "
-                    }
-                    else if (sdWeight.length > 4) {
+                    } else if (sdWeight.length > 4) {
                         phoneNumber.error = "Please enter you weight!"
-                    }
-                    else {
+                    } else {
                         // Make the register request
-                        val call = apiService.updateProfile(userData.id, sdFullName,sdPhoneNumber, sdAge, sdWeight, sdGender)
+                        val call = apiService.updateProfile(
+                            userData.id,
+                            sdFullName,
+                            sdPhoneNumber,
+                            sdAge,
+                            sdWeight,
+                            sdGender
+                        )
 
                         call.enqueue(object : Callback<String> {
-                            override fun onResponse(call: Call<String>, response: Response<String>) {
+                            override fun onResponse(
+                                call: Call<String>,
+                                response: Response<String>
+                            ) {
                                 if (response.isSuccessful) {
-                                    Log.d("INFO","Profile updated for user $sdFullName.")
-                                    Toast.makeText(applicationContext, "Profile Updated", Toast.LENGTH_SHORT).show()
+                                    Log.d("INFO", "Profile updated for user $sdFullName.")
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Profile Updated",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 } else {
-                                    Log.d("ERROR","Operation failed. Response code: ${response.code()}")
-                                    Toast.makeText(applicationContext, "Profile update failed. Check the fields!", Toast.LENGTH_SHORT).show()
+                                    Log.d(
+                                        "ERROR",
+                                        "Operation failed. Response code: ${response.code()}"
+                                    )
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Profile update failed. Check the fields!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             }
+
                             override fun onFailure(call: Call<String>, t: Throwable) {
-                                Log.d("ERROR","Profile update failed. Error: ${t.message}")
-                                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                                Log.d("ERROR", "Profile update failed. Error: ${t.message}")
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Server error. Try again!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         })
                         pnDialog.dismiss()
@@ -204,7 +226,7 @@ class PatientDashboard : AppCompatActivity() {
                             }
                         }
                         // Extract the treatment data from the map
-                        if(treatmentDataMap["id"]?.isNotBlank() == true) {
+                        if (treatmentDataMap["id"]?.isNotBlank() == true) {
                             val id = treatmentDataMap["id"]
                             val active = treatmentDataMap["active"]
                             val accepted = treatmentDataMap["accepted"]
@@ -228,19 +250,21 @@ class PatientDashboard : AppCompatActivity() {
                                 specialty.orEmpty()
                             )
 
-                            if(auxTreatment.accepted == "1" && auxTreatment.active == "1"){
+                            if (auxTreatment.accepted == "1" && auxTreatment.active == "1") {
                                 treatmentList.add(auxTreatment)
                             }
                         }
                     }
                     adapter.notifyDataSetChanged()
                 } else {
-                    Log.d("ERROR","Request failed. Response code: ${response.code()}")
+                    Log.d("ERROR", "Request failed. Response code: ${response.code()}")
                 }
             }
+
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("ERROR","Data request failed. Error: ${t.message}")
-                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                Log.d("ERROR", "Data request failed. Error: ${t.message}")
+                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
     }

@@ -16,7 +16,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class RequestTreatmentAdapter(val context: Context, private val treatmentList: ArrayList<MedicalRecord>) :
+class RequestTreatmentAdapter(
+    val context: Context,
+    private val treatmentList: ArrayList<MedicalRecord>
+) :
     RecyclerView.Adapter<RequestTreatmentAdapter.UserViewHolder>() {
 
 
@@ -47,12 +50,13 @@ class RequestTreatmentAdapter(val context: Context, private val treatmentList: A
                         context.startActivity(intent)
                     }
                 } else {
-                    Log.d("ERROR","Request failed. Response code: ${response.code()}")
+                    Log.d("ERROR", "Request failed. Response code: ${response.code()}")
                     Toast.makeText(context, "Doctor ID not found!", Toast.LENGTH_SHORT).show()
                 }
             }
+
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("ERROR","Data request failed. Error: ${t.message}")
+                Log.d("ERROR", "Data request failed. Error: ${t.message}")
                 Toast.makeText(context, "Server error. Try again!", Toast.LENGTH_SHORT).show()
             }
         })

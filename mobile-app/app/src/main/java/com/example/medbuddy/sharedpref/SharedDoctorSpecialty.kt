@@ -9,7 +9,7 @@ object SharedDoctorSpecialty {
     fun saveSpecialty(context: Context, specialty: String) {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = sharedPrefs.edit()
-        val auxSpecialty = specialty.replace("\n","")
+        val auxSpecialty = specialty.replace("\n", "")
         editor.putString(KEY_SPECIALTY, auxSpecialty)
         editor.apply()
     }

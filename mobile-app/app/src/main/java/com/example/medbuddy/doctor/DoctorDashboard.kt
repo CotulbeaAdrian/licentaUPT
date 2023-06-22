@@ -57,14 +57,20 @@ class DoctorDashboard : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     val aux = responseBody?.split("=")
-                    SharedDoctorSpecialty.saveSpecialty(applicationContext,aux?.get(1).toString())
+                    SharedDoctorSpecialty.saveSpecialty(applicationContext, aux?.get(1).toString())
                 } else {
-                    Toast.makeText(applicationContext, "Choose a specialty in Settings -> Edit Profile!!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        applicationContext,
+                        "Choose a specialty in Settings -> Edit Profile!!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
+
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("ERROR","Specialty request failed. Error: ${t.message}")
-                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                Log.d("ERROR", "Specialty request failed. Error: ${t.message}")
+                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
 
@@ -117,7 +123,7 @@ class DoctorDashboard : AppCompatActivity() {
                             }
                         }
                         // Extract the treatment data from the map
-                        if(treatmentDataMap["id"]?.isNotBlank() == true) {
+                        if (treatmentDataMap["id"]?.isNotBlank() == true) {
                             val id = treatmentDataMap["id"]
                             val active = treatmentDataMap["active"]
                             val accepted = treatmentDataMap["accepted"]
@@ -141,19 +147,21 @@ class DoctorDashboard : AppCompatActivity() {
                                 specialtyAux.orEmpty()
                             )
 
-                            if(auxTreatment.accepted == "1" && auxTreatment.active == "1"){
+                            if (auxTreatment.accepted == "1" && auxTreatment.active == "1") {
                                 treatmentList.add(auxTreatment)
                             }
                         }
                     }
                     adapter.notifyDataSetChanged()
                 } else {
-                    Log.d("ERROR","Request failed. Response code: ${response.code()}")
+                    Log.d("ERROR", "Active treatments request failed. Response code: ${response.code()}")
                 }
             }
+
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("ERROR","Data request failed. Error: ${t.message}")
-                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                Log.d("ERROR", "Active treatments request failed. Error: ${t.message}")
+                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
 
@@ -201,6 +209,7 @@ class DoctorDashboard : AppCompatActivity() {
                         parent: AdapterView<*>?, view: View?, position: Int, id: Long
                     ) {
                     }
+
                     override fun onNothingSelected(parent: AdapterView<*>?) {
                         // Do nothing
                     }
@@ -221,19 +230,40 @@ class DoctorDashboard : AppCompatActivity() {
                         phoneNumber.error = "Please enter 10 digits"
                         Toast.makeText(this, "Please enter 10 digits ", Toast.LENGTH_SHORT).show()
                     } else {
-                        val updateCall = apiService.updateDoctor(userData.id, sdFullName, sdPhoneNumber, sdSpeciality)
+                        val updateCall = apiService.updateDoctor(
+                            userData.id,
+                            sdFullName,
+                            sdPhoneNumber,
+                            sdSpeciality
+                        )
                         updateCall.enqueue(object : Callback<String> {
-                            override fun onResponse(call: Call<String>, response: Response<String>) {
+                            override fun onResponse(
+                                call: Call<String>,
+                                response: Response<String>
+                            ) {
                                 if (response.isSuccessful) {
-                                    Toast.makeText(applicationContext, "Your data has been changed", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Your data has been changed",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 } else {
-                                    Toast.makeText(applicationContext, "Update failed", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Update failed",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                                 mnDialog.dismiss()
                             }
+
                             override fun onFailure(call: Call<String>, t: Throwable) {
-                                Log.d("ERROR","Update request failed. Error: ${t.message}")
-                                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                                Log.d("ERROR", "Update doctor request failed. Error: ${t.message}")
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Server error. Try again!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         })
 

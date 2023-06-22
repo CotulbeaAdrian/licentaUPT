@@ -50,7 +50,7 @@ class DoctorNewAppointmentsAdapter(val context: Context, private val appointment
                 }
             }
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("ERROR","Data request failed. Error: ${t.message}")
+                Log.d("ERROR","Name request failed. Error: ${t.message}")
                 Toast.makeText(context, "Server error. Try again!", Toast.LENGTH_SHORT).show()
             }
         })

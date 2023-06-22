@@ -90,12 +90,15 @@ class DoctorNewAppointments : AppCompatActivity() {
                     }
                     adapter.notifyDataSetChanged()
                 } else {
-                    Log.d("ERROR", "Request failed. Response code: ${response.code()}")
+                    Log.d(
+                        "ERROR",
+                        "New appointments request failed. Response code: ${response.code()}"
+                    )
                 }
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("ERROR", "Data request failed. Error: ${t.message}")
+                Log.d("ERROR", "New appointments request failed. Error: ${t.message}")
                 Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT)
                     .show()
             }

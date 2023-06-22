@@ -36,7 +36,8 @@ class Register : AppCompatActivity() {
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?, view: View?, position: Int, id: Long
-            ) {}
+            ) {
+            }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 // Do nothing
@@ -51,8 +52,8 @@ class Register : AppCompatActivity() {
             val sdRole = spinner.selectedItem.toString()
 
             if (sdEmail.isEmpty() || sdPassword.isEmpty() ||
-                sdFullName.isEmpty() || sdPhoneNumber.isEmpty() || sdConfirmPassword.isEmpty())
-            {
+                sdFullName.isEmpty() || sdPhoneNumber.isEmpty() || sdConfirmPassword.isEmpty()
+            ) {
                 if (sdEmail.isEmpty()) {
                     email.error = "Please enter your email address!"
                 }
@@ -82,26 +83,39 @@ class Register : AppCompatActivity() {
 
                 val apiService = ApiServiceBuilder.apiService
                 // Make the register request
-                val call = apiService.register(sdFullName,sdEmail, sdPhoneNumber, sdPassword, sdRole)
+                val call =
+                    apiService.register(sdFullName, sdEmail, sdPhoneNumber, sdPassword, sdRole)
 
                 call.enqueue(object : Callback<String> {
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         if (response.isSuccessful) {
-                            Log.d("INFO","Registration success.")
+                            Log.d("INFO", "Registration success.")
 
                             val intent = Intent(applicationContext, Login::class.java)
                             startActivity(intent);
-                            Toast.makeText(applicationContext, "Account created successfully", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                applicationContext,
+                                "Account created successfully",
+                                Toast.LENGTH_SHORT
+                            ).show()
 
                         } else {
-                            Log.d("ERROR","Register failed. Response code: ${response.code()}")
-                            Toast.makeText(applicationContext, "Registration failed. Check the fields!", Toast.LENGTH_SHORT).show()
+                            Log.d("ERROR", "Register failed. Response code: ${response.code()}")
+                            Toast.makeText(
+                                applicationContext,
+                                "Registration failed. Check the fields!",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
 
                     override fun onFailure(call: Call<String>, t: Throwable) {
-                        Log.d("ERROR","Register request failed. Error: ${t.message}")
-                        Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                        Log.d("ERROR", "Register request failed. Error: ${t.message}")
+                        Toast.makeText(
+                            applicationContext,
+                            "Server error. Try again!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 })
             }

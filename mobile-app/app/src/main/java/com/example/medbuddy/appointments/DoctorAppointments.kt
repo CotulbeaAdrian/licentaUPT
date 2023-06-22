@@ -26,7 +26,7 @@ class DoctorAppointments : AppCompatActivity() {
     private lateinit var adapter: DoctorAppointmentsAdapter
 
     private lateinit var back: ImageView
-    private lateinit var newAppointments : LinearLayout
+    private lateinit var newAppointments: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +74,7 @@ class DoctorAppointments : AppCompatActivity() {
                             }
                         }
                         // Extract the treatment data from the map
-                        if(appointmentDataMap["id"]?.isNotBlank() == true) {
+                        if (appointmentDataMap["id"]?.isNotBlank() == true) {
                             val id = appointmentDataMap["id"]
                             val active = appointmentDataMap["active"]
                             val accepted = appointmentDataMap["accepted"]
@@ -96,18 +96,23 @@ class DoctorAppointments : AppCompatActivity() {
                                 specialty.orEmpty()
                             )
 
-                            if(auxAppointment.accepted == "1" && auxAppointment.active == "1" && auxAppointment.doctorID == userData.id)
+                            if (auxAppointment.accepted == "1" && auxAppointment.active == "1" && auxAppointment.doctorID == userData.id)
                                 appointmentsList.add(auxAppointment)
                         }
                     }
                     adapter.notifyDataSetChanged()
                 } else {
-                    Log.d("ERROR","Request failed. Response code: ${response.code()}")
+                    Log.d(
+                        "ERROR",
+                        "Doctor appointments request failed. Response code: ${response.code()}"
+                    )
                 }
             }
+
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("ERROR","Data request failed. Error: ${t.message}")
-                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                Log.d("ERROR", "Doctor appointments request failed. Error: ${t.message}")
+                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
     }

@@ -64,7 +64,7 @@ class DoctorHistory : AppCompatActivity() {
                             }
                         }
                         // Extract the treatment data from the map
-                        if(treatmentDataMap["id"]?.isNotBlank() == true) {
+                        if (treatmentDataMap["id"]?.isNotBlank() == true) {
                             val id = treatmentDataMap["id"]
                             val active = treatmentDataMap["active"]
                             val accepted = treatmentDataMap["accepted"]
@@ -88,18 +88,20 @@ class DoctorHistory : AppCompatActivity() {
                                 specialty.orEmpty()
                             )
 
-                            if(auxTreatment.accepted == "1" && auxTreatment.active == "0")
+                            if (auxTreatment.accepted == "1" && auxTreatment.active == "0")
                                 treatmentList.add(auxTreatment)
                         }
                     }
                     adapter.notifyDataSetChanged()
                 } else {
-                    Log.d("ERROR","Request failed. Response code: ${response.code()}")
+                    Log.d("ERROR", "Doctor history request failed. Response code: ${response.code()}")
                 }
             }
+
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("ERROR","Data request failed. Error: ${t.message}")
-                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                Log.d("ERROR", "Doctor history request failed. Error: ${t.message}")
+                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
     }

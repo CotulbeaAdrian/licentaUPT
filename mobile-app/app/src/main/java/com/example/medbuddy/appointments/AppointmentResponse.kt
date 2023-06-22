@@ -25,14 +25,12 @@ class AppointmentResponse : AppCompatActivity() {
 
         val apiService = ApiServiceBuilder.apiService
         val userData = SharedPrefUtil.getUserData(applicationContext)
-
         setContentView(R.layout.appointment_response)
 
         findViewById<ImageView>(R.id.BackButton).setOnClickListener {
             val intent = Intent(this, DoctorNewAppointments::class.java)
             startActivity(intent)
         }
-
         findViewById<TextView>(R.id.requestPatientName).text =
             intent.getStringExtra("patientFullName")
 
@@ -69,7 +67,6 @@ class AppointmentResponse : AppCompatActivity() {
         })
 
         val requestID = intent.getStringExtra("requestID")
-
         accept = findViewById(R.id.layoutAcceptRequest)
         accept.setOnClickListener {
             val date = findViewById<EditText>(R.id.givenDate).text.toString()

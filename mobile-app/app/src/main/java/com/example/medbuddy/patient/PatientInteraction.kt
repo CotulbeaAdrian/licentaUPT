@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class PatientInteraction : AppCompatActivity(){
+class PatientInteraction : AppCompatActivity() {
 
     private lateinit var chatRecyclerView: RecyclerView
     private lateinit var messageBox: EditText
@@ -41,9 +41,11 @@ class PatientInteraction : AppCompatActivity(){
     private lateinit var medicationTV: TextView
     private lateinit var mDialog: Dialog
     private lateinit var mnDialog: Dialog
+
     private companion object {
         private const val CHANNEL_ID = "channel01"
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -77,7 +79,11 @@ class PatientInteraction : AppCompatActivity(){
 
 
         findViewById<LinearLayout>(R.id.layoutGiveReview).setOnClickListener {
-            Toast.makeText(this, "Yet to be implemented.\nEverybody gets 5/5 for effort.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Yet to be implemented.\nEverybody gets 5/5 for effort.",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         val reminderButton = findViewById<LinearLayout>(R.id.layoutReminder)
@@ -160,7 +166,7 @@ class PatientInteraction : AppCompatActivity(){
                                 messageDataMap[key] = value
                             }
                         }
-                        if(messageDataMap["roomID"]?.isNotBlank() == true){
+                        if (messageDataMap["roomID"]?.isNotBlank() == true) {
                             val id = messageDataMap["roomID"]
                             val message = messageDataMap["message"]
                             val senderID = messageDataMap["senderID"]
@@ -177,13 +183,19 @@ class PatientInteraction : AppCompatActivity(){
                     }
                     messageAdapter.notifyDataSetChanged()
                 } else {
-                    Log.d("ERROR","Receive messages failed. Response code: ${response.code()}")
-                    Toast.makeText(applicationContext, "Receive messages failed", Toast.LENGTH_SHORT).show()
+                    Log.d("ERROR", "Receive messages failed. Response code: ${response.code()}")
+                    Toast.makeText(
+                        applicationContext,
+                        "Receive messages failed",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
+
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("ERROR","Request failed. Error: ${t.message}")
-                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                Log.d("ERROR", "Request failed. Error: ${t.message}")
+                Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
 
@@ -202,14 +214,25 @@ class PatientInteraction : AppCompatActivity(){
                         messageList.add(auxMessage)
                         messageAdapter.notifyDataSetChanged()
                     } else {
-                        Log.d("ERROR","Message failed to be sent. Response code: ${response.code()}")
-                        Toast.makeText(applicationContext, "Message failed to be sent.", Toast.LENGTH_SHORT).show()
+                        Log.d(
+                            "ERROR",
+                            "Message failed to be sent. Response code: ${response.code()}"
+                        )
+                        Toast.makeText(
+                            applicationContext,
+                            "Message failed to be sent.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
-                    Log.d("ERROR","Message failed to be sent serverside. Error: ${t.message}")
-                    Toast.makeText(applicationContext, "Server error. Try again!", Toast.LENGTH_SHORT).show()
+                    Log.d("ERROR", "Message failed to be sent serverside. Error: ${t.message}")
+                    Toast.makeText(
+                        applicationContext,
+                        "Server error. Try again!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
             messageBox.setText("")
