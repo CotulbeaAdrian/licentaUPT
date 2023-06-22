@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.medbuddy.main.Login
 import com.example.medbuddy.R
 import com.example.medbuddy.api.ApiServiceBuilder
+import com.example.medbuddy.appointments.PatientAppointments
 import com.example.medbuddy.data.MedicalRecord
 import com.example.medbuddy.virtualrequests.RequestCreate
 import com.google.android.material.textfield.TextInputLayout
@@ -60,7 +61,8 @@ class PatientDashboard : AppCompatActivity() {
 
         appointment=findViewById(R.id.layoutAppointments)
         appointment.setOnClickListener{
-            Toast.makeText(this, "To be implemented, stay soon!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, PatientAppointments::class.java)
+            startActivity(intent)
         }
 
         treatmentList = ArrayList()
@@ -73,7 +75,6 @@ class PatientDashboard : AppCompatActivity() {
         settingsButton.setOnClickListener{
             pDialog= Dialog(this)
             pDialog.setContentView(R.layout.pop_up_settings)
-            pDialog.setTitle("Pop-up Window")
             pDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             pDialog.window!!.setLayout(
                 ViewGroup.LayoutParams.WRAP_CONTENT,

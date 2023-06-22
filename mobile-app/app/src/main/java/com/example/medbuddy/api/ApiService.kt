@@ -22,8 +22,6 @@ interface ApiService {
         @Field("role") role: String
     ): Call<String>
 
-    // ....
-
     @FormUrlEncoded
     @POST("/updateProfile")
     fun updateProfile(
@@ -66,6 +64,32 @@ interface ApiService {
     fun getMedicalRecords(
     ): Call<String>
 
+    @POST("/getAppointments")
+    fun getAppointments(
+    ): Call<String>
+
+    @FormUrlEncoded
+    @POST("/createAppointment")
+    fun createAppointment(
+        @Field("patientID") patientID: String,
+        @Field("specialty") phoneNumber: String
+    ): Call<String>
+
+    @FormUrlEncoded
+    @POST("/acceptAppointment")
+    fun acceptAppointment(
+        @Field("requestID") requestID: String?,
+        @Field("date") date: String,
+        @Field("location") location: String,
+        @Field("doctorID") doctorID: String?
+    ): Call<String>
+
+    @FormUrlEncoded
+    @POST("/deleteAppointment")
+    fun deleteAppointment(
+        @Field("id") id: String?
+    ): Call<String>
+
     @FormUrlEncoded
     @POST("/getMessages")
     fun getMessages(
@@ -86,7 +110,7 @@ interface ApiService {
     fun createRequest(
         @Field("patientID") id: String,
         @Field("symptom") fullName: String,
-        @Field("specialty") phoneNumber: String,
+        @Field("specialty") phoneNumber: String
     ): Call<String>
 
     @FormUrlEncoded

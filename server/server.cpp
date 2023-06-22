@@ -441,7 +441,7 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                         response_aux << "medication=" << medication << std::endl;
                         response_aux << "specialty=" << specialty << "&" << std::endl;
 
-                        response_header += success;
+                        response_header = success;
                         response_body += response_aux.str();
                     } while (res->next());
                 }
@@ -528,7 +528,7 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                         response_aux << "medication=" << medication << std::endl;
                         response_aux << "specialty=" << specialty << "&" << std::endl;
 
-                        response_header += success;
+                        response_header = success;
                         response_body += response_aux.str();
                     } while (res->next());
                 }
@@ -556,7 +556,7 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
         }
     }
 
-    // ### Medical Records by ID ###
+    // ### Medical Records ###
 
     else if (method == "POST" && path == "/getMedicalRecords")
     {
@@ -599,15 +599,9 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                     response_aux << "medication=" << medication << std::endl;
                     response_aux << "specialty=" << specialty << "&" << std::endl;
 
-                    response_header += success;
+                    response_header = success;
                     response_body += response_aux.str();
                 } while (res->next());
-            }
-            else
-            {
-                // User not found or invalid credentials
-                response_header += unauthorized;
-                response_body = "Invalid id";
             }
 
             delete res;
@@ -618,6 +612,247 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
             std::cerr << "Data request failed: " << e.what() << std::endl;
             response_header += internalError;
             response_body = "Data request failed";
+        }
+    }
+
+    // ### Appointments ###
+
+    else if (method == "POST" && path == "/getAppointments")
+    {
+
+        try
+        {
+            // Create a MySQL connection
+            sql::Connection *con = driver->connect("tcp://medbuddy-db:3306", "admin", "admin");
+            con->setSchema("medbuddy");
+            // Prepare the SQL statement
+            std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement("SELECT * FROM appointment"));
+
+            sql::ResultSet *res = pstmt->executeQuery();
+
+            // Check if a matching user was found
+            if (res->next())
+            {
+                do
+                {
+                    // Retrieve the user's ID and username
+                    int id = res->getInt("id");
+                    std::string active = res->getString("active");
+                    std::string accepted = res->getString("accepted");
+                    std::string patientID = res->getString("patientID");
+                    std::string doctorID = res->getString("doctorID");
+                    std::string date = res->getString("date");
+                    std::string location = res->getString("location");
+                    std::string specialty = res->getString("specialty");
+
+                    // Build the response body with user and user details information
+                    std::ostringstream response_aux;
+                    response_aux << "id=" << id << std::endl;
+                    response_aux << "active=" << active << std::endl;
+                    response_aux << "accepted=" << accepted << std::endl;
+                    response_aux << "patientID=" << patientID << std::endl;
+                    response_aux << "doctorID=" << doctorID << std::endl;
+                    response_aux << "date=" << date << std::endl;
+                    response_aux << "location=" << location << std::endl;
+                    response_aux << "specialty=" << specialty << "&" << std::endl;
+
+                    response_header = success;
+                    response_body += response_aux.str();
+                } while (res->next());
+            }
+            else
+            {
+                // User not found or invalid credentials
+                response_header += unauthorized;
+                response_body = "Invalid roomID and receiverID";
+            }
+
+            delete res;
+            delete con;
+        }
+        catch (std::exception &e)
+        {
+            std::cerr << "Data request failed: " << e.what() << std::endl;
+            response_header += internalError;
+            response_body = "Data request failed";
+        }
+    }
+
+    // ### Create Appointment ###
+
+    else if (method == "POST" && path == "/createAppointment")
+    {
+        std::string line;
+
+        while (std::getline(request_stream, line))
+        {
+            // Reaching the last line which contains the request body
+        }
+
+        // URL decode the request body
+        std::string decoded_line = urlDecode(line);
+
+        size_t patientIDStart = decoded_line.find("patientID=") + 10;                               // Find the start position of the patientID and add the length of "patientID="
+        size_t patientIDEnd = decoded_line.find("&", patientIDStart);                               // Find the position of the "&" delimiter starting from patientIDStart
+        std::string patientID = decoded_line.substr(patientIDStart, patientIDEnd - patientIDStart); // Extract the patientID substring
+
+        size_t specialtyStart = decoded_line.find("specialty=") + 10;                               // Find the start position of the specialty and add the length of "specialty="
+        size_t specialtyEnd = decoded_line.find("&", specialtyStart);                               // Find the position of the "&" delimiter starting from specialtyStart
+        std::string specialty = decoded_line.substr(specialtyStart, specialtyEnd - specialtyStart); // Extract the specialty substring
+
+        // Check if all required fields are present
+        if (!patientID.empty() && !specialty.empty())
+        {
+            try
+            {
+                // Create a MySQL connection
+                sql::Connection *con = driver->connect("tcp://medbuddy-db:3306", "admin", "admin");
+                con->setSchema("medbuddy");
+
+                // Prepare the SQL statement
+                std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement("INSERT INTO appointment (patientID, specialty) VALUES (?, ?)"));
+                pstmt->setString(1, patientID);
+                pstmt->setString(2, specialty);
+
+                // Execute the SQL statement
+                pstmt->execute();
+
+                // Build the response body
+                response_header += success;
+                response_body = "Appointment created";
+
+                delete con;
+            }
+            catch (std::exception &e)
+            {
+                response_header += internalError;
+                std::cerr << "Appointment creation failed: " << e.what() << std::endl;
+                response_body = "Appointment creation failed";
+            }
+        }
+        else
+        {
+            response_header += badRequest;
+            response_body = "Invalid request create appointment";
+        }
+    }
+
+    // ### Accept Appointment ###
+
+    else if (method == "POST" && path == "/acceptAppointment")
+    {
+        std::string line;
+
+        while (std::getline(request_stream, line))
+        {
+            // Reaching the last line which contains the request body
+        }
+
+        // URL decode the request body
+        std::string decoded_line = urlDecode(line);
+
+        size_t requestIDStart = decoded_line.find("requestID=") + 10;                               // Find the start position of the requestID and add the length of "requestID="
+        size_t requestIDEnd = decoded_line.find("&");                                               // Find the position of the "&" delimiter
+        std::string requestID = decoded_line.substr(requestIDStart, requestIDEnd - requestIDStart); // Extract the requestID
+
+        size_t dateStart = decoded_line.find("date=") + 5;                      // Find the start position of the date and add the length of "date="
+        size_t dateEnd = decoded_line.find("&", dateStart);                     // Find the position of the "&" delimiter
+        std::string date = decoded_line.substr(dateStart, dateEnd - dateStart); // Extract the date substring
+
+        size_t locationStart = decoded_line.find("location=") + 9;                              // Find the start position of the location and add the length of "location="
+        size_t locationEnd = decoded_line.find("&", locationStart);                             // Find the position of the "&" delimiter starting from location
+        std::string location = decoded_line.substr(locationStart, locationEnd - locationStart); // Extract the location substring
+
+        size_t doctorIDStart = decoded_line.find("doctorID=") + 9; // Find the start position of the doctorID and add the length of "doctorID="
+        std::string doctorID = decoded_line.substr(doctorIDStart); // Extract the doctorID substring
+
+        // Check if all required fields are present
+        if (!requestID.empty() && !date.empty() && !location.empty() && !doctorID.empty())
+        {
+            try
+            {
+                // Create a MySQL connection
+                sql::Connection *con = driver->connect("tcp://medbuddy-db:3306", "admin", "admin");
+                con->setSchema("medbuddy");
+
+                // Update fullName and phoneNumber in the users table
+                std::unique_ptr<sql::PreparedStatement> stmt(con->prepareStatement("UPDATE appointment SET location = ?, date = ?, doctorID = ?, accepted = '1' WHERE id = ?"));
+                stmt->setString(1, location);
+                stmt->setString(2, date);
+                stmt->setString(3, doctorID);
+                stmt->setString(4, requestID);
+
+                stmt->executeQuery();
+
+                // Build the response body
+                response_header += success;
+                response_body = "Accepted appointment successfully";
+
+                delete con;
+            }
+            catch (std::exception &e)
+            {
+                response_header += internalError;
+                std::cerr << "Accept failed: " << e.what() << std::endl;
+                response_body = "Accept request failed";
+            }
+        }
+        else
+        {
+            response_header += badRequest;
+            response_body = "Invalid accept request";
+        }
+    }
+
+    // ### Delete Appointment ###
+
+    else if (method == "POST" && path == "/deleteAppointment")
+    {
+        std::string line;
+
+        while (std::getline(request_stream, line))
+        {
+            // Reaching the last line which contains the request body
+        }
+
+        // URL decode the request body
+        std::string decoded_line = urlDecode(line);
+
+        size_t idStart = decoded_line.find("id=") + 3; // Find the start position of the id and add the length of "id="
+        std::string id = decoded_line.substr(idStart); // Extract the id substring
+
+        // Check if all required fields are present
+        if (!id.empty())
+        {
+            try
+            {
+                // Create a MySQL connection
+                sql::Connection *con = driver->connect("tcp://medbuddy-db:3306", "admin", "admin");
+                con->setSchema("medbuddy");
+
+                // Update fullName and phoneNumber in the users table
+                std::unique_ptr<sql::PreparedStatement> stmt(con->prepareStatement("UPDATE appointment SET active = '0' WHERE id = ?"));
+                stmt->setString(1, id);
+
+                stmt->execute();
+
+                // Build the response body
+                response_header += success;
+                response_body = "Deleted appointment successfully";
+
+                delete con;
+            }
+            catch (std::exception &e)
+            {
+                response_header += internalError;
+                std::cerr << "Delete appointment failed: " << e.what() << std::endl;
+                response_body = "Delete appointment failed";
+            }
+        }
+        else
+        {
+            response_header += badRequest;
+            response_body = "Invalid delete appointment request";
         }
     }
 
@@ -660,7 +895,7 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                         // Retrieve the user's ID and username
                         std::string fullName = res->getString("fullName");
 
-                        response_header += success;
+                        response_header = success;
                         response_body = "fullName=" + fullName + "\n";
                     } while (res->next());
                 }
@@ -870,7 +1105,7 @@ void handleRequest(tcp::socket &socket, const std::string &request, sql::mysql::
                         response_aux << "senderID=" << senderID << std::endl;
                         response_aux << "message=" << message << "&" << std::endl;
 
-                        response_header += success;
+                        response_header = success;
                         response_body += response_aux.str();
                     } while (res->next());
                 }

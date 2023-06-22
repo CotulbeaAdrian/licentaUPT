@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".appointments.DoctorAppointments">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_100sdp"
+        android:background="#993333"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/requestsListTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/roboto_slab"
+        android:text="Your appointments"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_16sdp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/backButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:clickable="true"
+        android:src="@drawable/ic_treatment_back"
+        android:tint="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/doctorRequestsList"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_marginLeft="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_49sdp"
+        android:layout_marginRight="@dimen/_16sdp"
+        android:layout_marginBottom="@dimen/_40sdp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="@dimen/_16sdp"
+        app:layout_constraintBottom_toTopOf="@id/appointmentRequests"
+        app:layout_constraintTop_toBottomOf="@id/requestsListTitle">
+
+        <LinearLayout
+            android:id="@+id/RequestsList"
+            android:layout_width="match_parent"
+            android:layout_height="475dp"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/appointmentsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/list_element" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/appointmentRequests"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="@dimen/_16sdp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:id="@+id/newAppointments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/newAppointmentsRequests"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_appointment"
+                    tools:ignore="ImageContrastCheck" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_slab"
+                    android:text="New appointments requests"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
