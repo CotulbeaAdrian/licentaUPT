@@ -1,6 +1,9 @@
 Link-ul catre repository-ul de GitHub unde a fost dezvoltata aplicatia este:
 https://github.com/CotulbeaAdrian/licentaUPT
 
+Link-ul catre repository-ul de UPT Gitlab unde a fost incarcata ulterior aplicatia este:
+https://gitlab.upt.ro/adrian.cotulbea/licentacotulbeaadrian
+
 Pentru a porni serverul trebuie ca sistemul sa dispuna de Docker si de Docker-Compose, apoi, din directorul server, sa se apeleze comanda: 
 docker-compose up
 
