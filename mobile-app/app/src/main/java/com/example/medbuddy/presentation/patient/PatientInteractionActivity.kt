@@ -1,4 +1,4 @@
-package com.example.medbuddy.patient
+package com.example.medbuddy.presentation.patient
 
 import android.app.*
 import android.content.Context

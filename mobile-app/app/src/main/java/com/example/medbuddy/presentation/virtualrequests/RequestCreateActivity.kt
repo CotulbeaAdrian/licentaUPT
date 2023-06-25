@@ -1,4 +1,4 @@
-package com.example.medbuddy.appointments
+package com.example.medbuddy.virtualrequests
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,7 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.medbuddy.patient.PatientDashboardActivity
+import com.example.medbuddy.presentation.patient.PatientDashboardActivity
 import com.example.medbuddy.R
 import com.example.medbuddy.data.sharedpref.api.ApiServiceBuilder
 import com.example.medbuddy.data.sharedpref.SharedPrefUtil
@@ -14,14 +14,15 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class AppointmentCreateActivity : AppCompatActivity() {
+class RequestCreateActivity : AppCompatActivity() {
 
     private lateinit var spinner: Spinner
+    private lateinit var patientWords: EditText
     private lateinit var back: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.appointment_create)
+        setContentView(R.layout.request_create)
 
         back = findViewById(R.id.BackButton)
         back.setOnClickListener {
@@ -29,7 +30,9 @@ class AppointmentCreateActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        spinner = findViewById(R.id.spinner_specialties)
+        patientWords = findViewById(R.id.patientWords)
+
+        spinner = findViewById(R.id.spinner_medical)
         val adapter = ArrayAdapter.createFromResource(
             this, R.array.medical_specialties, android.R.layout.simple_spinner_item
         )
@@ -50,36 +53,34 @@ class AppointmentCreateActivity : AppCompatActivity() {
 
         val sendRequest = findViewById<LinearLayout>(R.id.sendRequestLayout)
         sendRequest.setOnClickListener {
+            val symptoms = patientWords.text.toString()
             val specialty = spinner.selectedItem.toString()
 
             val apiService = ApiServiceBuilder.apiService
-            val call = apiService.createAppointment(userData.id, specialty)
+            val call = apiService.createRequest(userData.id, symptoms, specialty)
             call.enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     if (response.isSuccessful) {
-                        val intent = Intent(applicationContext, PatientAppointmentsActivity::class.java)
+                        val intent = Intent(applicationContext, PatientDashboardActivity::class.java)
                         startActivity(intent)
                         Toast.makeText(
                             applicationContext,
-                            "Appointment request has been sent",
+                            "Request has been sent",
                             Toast.LENGTH_SHORT
                         ).show()
 
                     } else {
-                        Log.d(
-                            "ERROR",
-                            "Appointment request failed. Response code: ${response.code()}"
-                        )
+                        Log.d("ERROR", "Request failed. Response code: ${response.code()}")
                         Toast.makeText(
                             applicationContext,
-                            "Appointment request failed. Check the fields!",
+                            "Request failed. Check the fields!",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
-                    Log.d("ERROR", "Create appointment request failed. Error: ${t.message}")
+                    Log.d("ERROR", "Create request failed. Error: ${t.message}")
                     Toast.makeText(
                         applicationContext,
                         "Server error. Try again!",

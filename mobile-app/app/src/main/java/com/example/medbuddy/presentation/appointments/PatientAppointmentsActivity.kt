@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.medbuddy.R
 import com.example.medbuddy.data.sharedpref.api.ApiServiceBuilder
 import com.example.medbuddy.entities.Appointment
-import com.example.medbuddy.patient.PatientDashboardActivity
+import com.example.medbuddy.presentation.patient.PatientDashboardActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -41,7 +41,7 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".patient.PatientDashboardActivity"
+            android:name=".presentation.patient.PatientDashboardActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
@@ -61,7 +61,7 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".patient.PatientInteractionActivity"
+            android:name=".presentation.patient.PatientInteractionActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
@@ -81,7 +81,7 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".patient.PatientHistoryActivity"
+            android:name=".presentation.patient.PatientHistoryActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
