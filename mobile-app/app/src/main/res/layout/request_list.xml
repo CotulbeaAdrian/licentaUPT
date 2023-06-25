@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".virtualrequests.RequestsList">
+    tools:context=".virtualrequests.RequestsListActivity">
 
     <View
         android:layout_width="match_parent"

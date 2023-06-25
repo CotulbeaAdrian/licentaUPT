@@ -1,6 +1,6 @@
 package com.example.medbuddy.chat
 
-import com.example.medbuddy.sharedpref.SharedPrefUtil
+import com.example.medbuddy.data.sharedpref.SharedPrefUtil
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.medbuddy.R
-import com.example.medbuddy.data.Message
+import com.example.medbuddy.entities.Message
 
 class MessageAdapter(val context: Context, private val messageList: ArrayList<Message>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {

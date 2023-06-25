@@ -2,7 +2,6 @@ package com.example.medbuddy.appointments
 
 import android.app.Dialog
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.util.Log
@@ -14,9 +13,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.medbuddy.R
-import com.example.medbuddy.api.ApiServiceBuilder
-import com.example.medbuddy.data.Appointment
-import com.example.medbuddy.doctor.DoctorDashboard
+import com.example.medbuddy.data.sharedpref.api.ApiServiceBuilder
+import com.example.medbuddy.entities.Appointment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

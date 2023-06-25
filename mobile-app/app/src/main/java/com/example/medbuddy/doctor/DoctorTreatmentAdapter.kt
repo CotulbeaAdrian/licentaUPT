@@ -10,8 +10,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.medbuddy.R
-import com.example.medbuddy.api.ApiServiceBuilder
-import com.example.medbuddy.data.MedicalRecord
+import com.example.medbuddy.data.sharedpref.api.ApiServiceBuilder
+import com.example.medbuddy.entities.MedicalRecord
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,7 +42,7 @@ class DoctorTreatmentAdapter(
                     holder.textName.text = fullName + " - " + treatment.diagnostic
 
                     holder.itemView.setOnClickListener {
-                        val intent = Intent(context, DoctorInteraction::class.java)
+                        val intent = Intent(context, DoctorInteractionActivity::class.java)
                         intent.putExtra("recordID", treatment.id)
                         intent.putExtra("symptom", treatment.symptom)
                         intent.putExtra("diagnostic", treatment.diagnostic)

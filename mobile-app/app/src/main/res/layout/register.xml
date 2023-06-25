@@ -6,7 +6,7 @@
     android:background="#F1948A"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context=".main.Register">
+    tools:context=".main.RegisterActivity">
 
     <ImageView
         android:id="@+id/logoImage"

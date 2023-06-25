@@ -10,8 +10,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.medbuddy.R
-import com.example.medbuddy.api.ApiServiceBuilder
-import com.example.medbuddy.data.Appointment
+import com.example.medbuddy.data.sharedpref.api.ApiServiceBuilder
+import com.example.medbuddy.entities.Appointment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,7 +38,7 @@ class DoctorNewAppointmentsAdapter(val context: Context, private val appointment
                     holder.textName.text = fullName
 
                     holder.itemView.setOnClickListener {
-                        val intent = Intent(context, AppointmentResponse::class.java)
+                        val intent = Intent(context, AppointmentResponseActivity::class.java)
                         intent.putExtra("requestID", appointment.id)
                         intent.putExtra("patientID", appointment.patientID)
                         intent.putExtra("patientFullName", fullName)
