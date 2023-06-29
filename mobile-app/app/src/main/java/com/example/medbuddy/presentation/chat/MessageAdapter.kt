@@ -1,4 +1,4 @@
-package com.example.medbuddy.chat
+package com.example.medbuddy.presentation.chat
 
 import com.example.medbuddy.data.sharedpref.SharedPrefUtil
 import android.content.Context

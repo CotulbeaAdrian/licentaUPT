@@ -1,4 +1,4 @@
-package com.example.medbuddy.virtualrequests
+package com.example.medbuddy.presentation.virtualrequests
 
 import com.example.medbuddy.data.sharedpref.SharedDoctorSpecialty
 import android.content.Intent
@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.medbuddy.doctor.DoctorDashboardActivity
+import com.example.medbuddy.presentation.doctor.DoctorDashboardActivity
 import com.example.medbuddy.R
 import com.example.medbuddy.data.sharedpref.api.ApiServiceBuilder
 import com.example.medbuddy.entities.MedicalRecord

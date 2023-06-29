@@ -1,4 +1,4 @@
-package com.example.medbuddy.doctor
+package com.example.medbuddy.presentation.doctor
 
 import android.app.*
 import android.content.Context
@@ -15,7 +15,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.medbuddy.main.MainActivity
-import com.example.medbuddy.chat.MessageAdapter
+import com.example.medbuddy.presentation.chat.MessageAdapter
 import com.example.medbuddy.R
 import com.example.medbuddy.data.sharedpref.api.ApiServiceBuilder
 import com.example.medbuddy.entities.Message

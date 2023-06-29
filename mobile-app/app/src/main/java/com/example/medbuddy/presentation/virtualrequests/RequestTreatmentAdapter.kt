@@ -1,4 +1,4 @@
-package com.example.medbuddy.virtualrequests
+package com.example.medbuddy.presentation.virtualrequests
 
 import android.content.Context
 import android.content.Intent

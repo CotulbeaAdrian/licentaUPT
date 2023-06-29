@@ -1,4 +1,4 @@
-package com.example.medbuddy.appointments
+package com.example.medbuddy.presentation.appointments
 
 import android.content.Intent
 import android.os.Bundle

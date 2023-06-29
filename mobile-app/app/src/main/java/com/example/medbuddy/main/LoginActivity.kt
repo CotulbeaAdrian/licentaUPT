@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.medbuddy.R
 import com.example.medbuddy.data.sharedpref.api.ApiServiceBuilder
 import com.example.medbuddy.entities.UserData
-import com.example.medbuddy.doctor.DoctorDashboardActivity
+import com.example.medbuddy.presentation.doctor.DoctorDashboardActivity
 import com.example.medbuddy.presentation.patient.PatientDashboardActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout

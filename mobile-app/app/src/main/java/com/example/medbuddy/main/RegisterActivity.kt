@@ -92,7 +92,7 @@ class RegisterActivity : AppCompatActivity() {
                             Log.d("INFO", "Registration success.")
 
                             val intent = Intent(applicationContext, LoginActivity::class.java)
-                            startActivity(intent);
+                            startActivity(intent)
                             Toast.makeText(
                                 applicationContext,
                                 "Account created successfully",

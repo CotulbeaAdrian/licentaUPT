@@ -15,7 +15,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.medbuddy.main.MainActivity
-import com.example.medbuddy.chat.MessageAdapter
+import com.example.medbuddy.presentation.chat.MessageAdapter
 import com.example.medbuddy.R
 import com.example.medbuddy.data.sharedpref.api.ApiServiceBuilder
 import com.example.medbuddy.entities.Message
@@ -270,6 +270,7 @@ class PatientInteractionActivity : AppCompatActivity() {
             notificationIntent,
             PendingIntent.FLAG_IMMUTABLE
         )
+
         val currentTime = Calendar.getInstance().timeInMillis
         val triggerTime =
             currentTime + (hours * 60 * 60 * 1000) // hours * minutes * seconds * milliseconds

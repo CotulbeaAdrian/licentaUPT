@@ -1,4 +1,4 @@
-package com.example.medbuddy.doctor
+package com.example.medbuddy.presentation.doctor
 
 import com.example.medbuddy.data.sharedpref.SharedPrefUtil
 import android.content.Intent

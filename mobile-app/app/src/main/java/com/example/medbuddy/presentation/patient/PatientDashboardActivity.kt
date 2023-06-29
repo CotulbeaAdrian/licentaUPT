@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.medbuddy.main.LoginActivity
 import com.example.medbuddy.R
 import com.example.medbuddy.data.sharedpref.api.ApiServiceBuilder
-import com.example.medbuddy.appointments.PatientAppointmentsActivity
+import com.example.medbuddy.presentation.appointments.PatientAppointmentsActivity
 import com.example.medbuddy.entities.MedicalRecord
-import com.example.medbuddy.virtualrequests.RequestCreateActivity
+import com.example.medbuddy.presentation.virtualrequests.RequestCreateActivity
 import com.google.android.material.textfield.TextInputLayout
 import retrofit2.Call
 import retrofit2.Callback

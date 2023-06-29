@@ -1,4 +1,4 @@
-package com.example.medbuddy.appointments
+package com.example.medbuddy.presentation.appointments
 
 import android.app.Dialog
 import android.content.Context

@@ -46,17 +46,17 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".doctor.DoctorDashboardActivity"
+            android:name=".presentation.doctor.DoctorDashboardActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".doctor.DoctorHistoryActivity"
+            android:name=".presentation.doctor.DoctorHistoryActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".doctor.DoctorInteractionActivity"
+            android:name=".presentation.doctor.DoctorInteractionActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
@@ -66,17 +66,17 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".virtualrequests.RequestCreateActivity"
+            android:name=".presentation.virtualrequests.RequestCreateActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".virtualrequests.RequestsListActivity"
+            android:name=".presentation.virtualrequests.RequestsListActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".virtualrequests.RequestResponseActivity"
+            android:name=".presentation.virtualrequests.RequestResponseActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
@@ -86,27 +86,27 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".appointments.DoctorAppointmentsActivity"
+            android:name=".presentation.appointments.DoctorAppointmentsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".appointments.AppointmentResponseActivity"
+            android:name=".presentation.appointments.AppointmentResponseActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".appointments.AppointmentCreateActivity"
+            android:name=".presentation.appointments.AppointmentCreateActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".appointments.DoctorNewAppointmentsActivity"
+            android:name=".presentation.appointments.DoctorNewAppointmentsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".appointments.PatientAppointmentsActivity"
+            android:name=".presentation.appointments.PatientAppointmentsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
